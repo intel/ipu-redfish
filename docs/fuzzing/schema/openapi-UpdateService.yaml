@@ -1,0 +1,1274 @@
+components:
+  schemas:
+    RedfishError:
+      description: The error payload from a Redfish service.
+      properties:
+        error:
+          description: The properties that describe an error from a Redfish service.
+          properties:
+            '@Message.ExtendedInfo':
+              description: An array of messages describing one or more error messages.
+              items:
+                $ref: Message.v1_2_0.yaml#/components/schemas/Message_v1_2_0_Message
+              type: array
+              x-longDescription: This property shall be an array of message objects
+                describing one or more error messages.
+            code:
+              description: A string indicating a specific MessageId from a message
+                registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a string indicating a
+                specific MessageId from a message registry.
+            message:
+              description: A human-readable error message corresponding to the message
+                in a message registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a human-readable error
+                message corresponding to the message in a message registry.
+          required:
+          - code
+          - message
+          type: object
+          x-longDescription: The Redfish Specification-described type shall contain
+            properties that describe an error from a Redfish service.
+      required:
+      - error
+      type: object
+      x-longDescription: The Redfish Specification-described type shall contain an
+        error payload from a Redfish service.
+info:
+  contact:
+    name: DMTF
+    url: https://www.dmtf.org/standards/redfish
+  description: This contains the definition of a Redfish service.
+  title: Redfish
+  version: '2023.3'
+  x-copyright: Copyright 2023 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright
+openapi: 3.0.1
+paths:
+  /redfish/v1/UpdateService:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_UpdateService
+          description: The response contains a representation of the UpdateService
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_UpdateService
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_UpdateService
+          description: The response contains a representation of the UpdateService
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_UpdateService
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_UpdateService
+          description: The response contains a representation of the UpdateService
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/Actions/UpdateService.GenerateSSHIdentityKeyPair:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_GenerateSSHIdentityKeyPairRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the GenerateSSHIdentityKeyPair
+            action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the GenerateSSHIdentityKeyPair
+            action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/Actions/UpdateService.RemoveSSHIdentityKeyPair:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_RemoveSSHIdentityKeyPairRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the RemoveSSHIdentityKeyPair
+            action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the RemoveSSHIdentityKeyPair
+            action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/Actions/UpdateService.SimpleUpdate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_SimpleUpdateRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the SimpleUpdate action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the SimpleUpdate action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/Actions/UpdateService.StartUpdate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: UpdateService.v1_13_0.yaml#/components/schemas/UpdateService_v1_13_0_StartUpdateRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the StartUpdate action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the StartUpdate action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/ClientCertificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/ClientCertificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/ClientCertificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/ClientCertificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/FirmwareInventory:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventoryCollection.yaml#/components/schemas/SoftwareInventoryCollection_SoftwareInventoryCollection
+          description: The response contains a representation of the SoftwareInventoryCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/FirmwareInventory/{SoftwareInventoryId}:
+    get:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/PublicIdentitySSHKey/{KeyId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerCertificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerCertificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerCertificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerCertificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerSSHKeys:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: KeyCollection.yaml#/components/schemas/KeyCollection_KeyCollection
+          description: The response contains a representation of the KeyCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: A resource of type Key has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/RemoteServerSSHKeys/{KeyId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/SoftwareInventory:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventoryCollection.yaml#/components/schemas/SoftwareInventoryCollection_SoftwareInventoryCollection
+          description: The response contains a representation of the SoftwareInventoryCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/UpdateService/SoftwareInventory/{SoftwareInventoryId}:
+    get:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the SoftwareInventory resource
+        in: path
+        name: SoftwareInventoryId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: SoftwareInventory.v1_10_1.yaml#/components/schemas/SoftwareInventory_v1_10_1_SoftwareInventory
+          description: The response contains a representation of the SoftwareInventory
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition

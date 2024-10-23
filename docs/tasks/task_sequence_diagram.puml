@@ -1,0 +1,118 @@
+@startuml
+note left
+    This diagram is out of date
+end note
+group Scheduling
+actor PODM
+participant REST
+participant "TaskManager : GenericManager<Task>" << shared for simplicity sake >>
+participant Task
+box "Agent" #LightBlue
+	participant Agent
+	participant TaskRunner
+end box
+PODM -> REST : POST/DELETE
+activate REST
+REST -> Agent : GAMI command
+activate Agent
+Agent -> "TaskManager : GenericManager<Task>" : create <font color=red><b>Task
+activate "TaskManager : GenericManager<Task>"
+create Task
+"TaskManager : GenericManager<Task>" -> Task : create
+"TaskManager : GenericManager<Task>" -> Agent : created
+deactivate "TaskManager : GenericManager<Task>"
+Agent -> TaskRunner : insert
+activate TaskRunner
+TaskRunner -> Agent : Task scheduled for async execution
+deactivate TaskRunner
+note right
+    To be executed asynchronously
+    {
+        ...
+        long-running operation
+        ...
+        <font color=red><b>Update Task
+    }
+end note
+Agent -> REST : Response
+deactivate Agent
+REST -> PODM : 202 (Accepted)
+deactivate REST
+note left
+    include location header
+    containing URL of Task Monitor
+end note
+end
+
+group Before Execution
+PODM -> REST : GET "Task Monitor URL"
+REST -> "TaskManager : GenericManager<Task>" : get Task resource
+activate "TaskManager : GenericManager<Task>"
+"TaskManager : GenericManager<Task>" -> Task : Get
+activate Task
+Task -> "TaskManager : GenericManager<Task>" : Task Resource
+deactivate Task
+"TaskManager : GenericManager<Task>" -> REST : Task Resource
+deactivate "TaskManager : GenericManager<Task>"
+REST -> PODM : 202 (Accepted)\nTask : {\n  ...\n  status=new\n}
+note right
+    The response body of a 202 (Accepted)
+    should contain an instance
+    of the Task resource describing
+    the state of the task.
+end note
+end
+
+group Asynchronous Task Execution
+TaskRunner -> TaskRunner : Run scheduled task
+activate TaskRunner
+PODM -> REST : GET "Task Monitor URL"
+REST -> "TaskManager : GenericManager<Task>" : get Task resource
+activate "TaskManager : GenericManager<Task>"
+"TaskManager : GenericManager<Task>" -> Task : Get
+activate Task
+Task -> "TaskManager : GenericManager<Task>" : Task Resource
+deactivate Task
+"TaskManager : GenericManager<Task>" -> REST : Task
+deactivate "TaskManager : GenericManager<Task>"
+REST -> PODM : 202 (Accepted)\nTask : {\n  ...\n  status=in-progress\n}
+TaskRunner -> "TaskManager : GenericManager<Task>" : Update Task Resource
+"TaskManager : GenericManager<Task>" -> Task : Update
+activate Task
+Task -> "TaskManager : GenericManager<Task>" : Updated
+deactivate Task
+deactivate TaskRunner
+end
+
+group Task completed
+PODM -> REST : GET "Task Monitor URL"
+REST -> "TaskManager : GenericManager<Task>" : get Task resource
+activate "TaskManager : GenericManager<Task>"
+
+"TaskManager : GenericManager<Task>" -> Task : Get
+activate Task
+Task -> "TaskManager : GenericManager<Task>" : Task Resource
+deactivate Task
+
+
+"TaskManager : GenericManager<Task>" -> REST : Task
+deactivate "TaskManager : GenericManager<Task>"
+REST -> PODM : 200 (OK)\nResponse object : {\n  ...\n}
+note right
+    Once the operation has completed, the Task Monitor shall return a status code of OK (200) and include the headers and response
+    body of the initial operation, as if it had completed synchronously. If the initial operation resulted in an error, the body of the
+    response shall contain an Error Response.
+end note
+end
+
+legend right
+    Part of the diagram that shows interactions
+    with TaskManager is a simplified model.
+
+    Real implementation requires TaskManager
+    on both ends - agent and reset server.
+    Synchronization of the Task model is out of scope
+    of this diagram.
+endlegend
+
+@enduml

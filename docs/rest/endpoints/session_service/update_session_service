@@ -1,0 +1,64 @@
+@startuml
+participant Mux as Mux
+box "Endpoint" #LightGreen
+participant "SessionService" as sService
+end box
+
+box "Model" #LightBlue
+participant "SessionServiceManager" as SessionServiceManager
+end box
+participant JsonValidator
+
+Mux -> sService: patch(request, response)
+activate sService
+note left
+PATCH https://<IP>:<PORT>/redfish/v1/SessionService
+Content-Type: application/json
+X-Auth-Token: <X-Auth-Token>
+{
+  "ServiceEnabled": true,
+  "SessionTimeout": 455
+}
+end note
+sService -> JsonValidator: validate_request_body(request)
+note right
+if INVALID
+appropriate HTTP error header
+end note
+activate JsonValidator
+
+create "Json<request>" as JSON
+JsonValidator -> JSON: create
+JsonValidator --> sService: VALID
+deactivate JsonValidator
+sService -> JSON: get_params(ServiceEnabled, SessionTimeout)
+activate JSON
+JSON --> sService
+deactivate JSON
+sService -> SessionServiceManager: set_params(ServiceEnabled, SessionTimeout)
+activate SessionServiceManager
+SessionServiceManager --> sService
+deactivate SessionServiceManager
+sService -> sService: setStatus(200)
+activate sService
+note left
+HTTP/1.1 200 OK
+end note
+sService -> sService:get(request, response)
+activate sService
+sService--> Mux: response
+note left
+HTTP/1.1 200 OK
+{
+  "@odata.context": "/redfish/v1/$metadata#SessionService.SessionService",
+  "@odata.id": "/redfish/v1/SessionService",
+  ...
+  "ServiceEnabled": true,
+  "SessionTimeout": 455,
+  ...
+}
+end note
+deactivate sService
+deactivate sService
+deactivate sService
+@enduml
