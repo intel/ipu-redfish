@@ -4,7 +4,7 @@
 The repo contains the Redfish code for Intel® Internet Processing Unit (IPU) SoC E2100 software. This is an official public release mirror repo. 
 
 ## Build
-The current `main` branch contains the original code of IPU Redfish code. It has the proprietary components.
+The current `main` branch contains the original code of IPU Redfish code. It has the proprietary components
 and it is not compilable by default. If you would like to build the original code, you need to obtain the copy the Intel IPU SDK,
 available under SDK License.
 
@@ -25,7 +25,7 @@ You can find it at `compilable-main` branch.
 
 ## Run server
 
-To start the Redfish launch the `ipu-redfish-server` from `build.*/bin` with addition of the path to the config file
+To start the Redfish launch the `ipu-redfish-server` from `build.*/bin` with addition of the path to the config file.
 By default it is located in `application/config/imc-redfish-configuration.json`.
 
 The `imc-redfish-configuration.json` should be adjusted according to the host settings.
