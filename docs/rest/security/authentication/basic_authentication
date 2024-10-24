@@ -1,0 +1,53 @@
+@startuml
+
+group Basic Authentication
+
+participant Connector
+participant BasicAuthentication as basicA
+box "Microhttpd" #LightBlue
+participant "MHD_Connection" as conn
+end box
+participant AccountManager
+
+Connector -> basicA: authenticate
+note left
+(Authentication of each request)
+
+GET https://<IP>:<PORT>/redfish/v1/<protected_resource>
+ ...
+Authorization: Basic cm9vdDpwYSQkdzByZA==
+ ...
+end note
+activate basicA
+basicA -> basicA: perform
+activate basicA
+basicA -> conn: get_credentials
+activate conn
+conn --> basicA: (user_name, password)
+deactivate conn
+basicA -> AccountManager: validate_credentials (user_name, password)
+activate AccountManager
+AccountManager --> basicA
+deactivate AccountManager
+alt VALID
+basicA -->Connector: AuthStatus::SUCCESS
+else INVALID
+basicA -->Connector: AuthStatus::FAILURE
+note left
+HTTP/1.1 401 Unauthorized
+Connection: Keep-Alive
+Content-Length: <LENGTH>
+WWW-Authenticate: Basic realm="/redfish/v1/<protected_resource>"
+
+<img img/basic_authentication.png>
+end note
+deactivate basicA
+
+end
+
+deactivate basicA
+
+
+end
+
+@enduml

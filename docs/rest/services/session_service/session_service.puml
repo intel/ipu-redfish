@@ -1,0 +1,23 @@
+@startuml
+package "Endpoints (rest::endpoint)" #DDDDDD {
+  EndpointBase <|-- SessionService
+  EndpointBase <|-- SessionCollection
+  class "Session" as eSession
+  EndpointBase <|-- eSession
+}
+
+package "Model (rest::security::session)" {
+  Singleton <|-- SessionServiceManager
+  Singleton <|-- SessionManager
+  class "Session" as sSession
+  SessionManager o- sSession
+class "SessionService" as sSessionService{
+std::thread m_thread;
+}
+}
+
+package rest::validators::schema {
+  class SessionCollectionPostSchema
+  class SessionServicePatchSchema
+}
+@enduml

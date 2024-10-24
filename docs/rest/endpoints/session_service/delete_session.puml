@@ -1,0 +1,50 @@
+@startuml
+participant Mux as Mux
+box "Endpoint" #LightGreen
+participant "Session" as eSession
+end box
+
+box "Model" #LightBlue
+participant SessionManager
+participant SessionMap
+participant "Session" as sSession
+participant "SessionServiceManager" as SessionServiceManager
+end box
+
+Mux -> eSession: executeHandler
+activate eSession
+note left
+DELETE https://<IP>:<PORT>/redfish/v1/SessionService/Sessions/3
+Content-Type: application/json
+X-Auth-Token: <X-Auth-Token>
+end note
+eSession-> SessionServiceManager: is_service_enabled
+activate SessionServiceManager
+note right
+if NOT OK
+400 BAD_REQUEST
+end note
+SessionServiceManager --> eSession: OK
+deactivate SessionServiceManager
+eSession -> SessionManager: del(session_id)
+activate SessionManager
+SessionManager -> SessionMap: session_exists
+activate SessionMap
+SessionMap --> SessionManager: YES
+deactivate SessionMap
+note right
+if NO : 404 Not Found
+end note
+SessionManager -> sSession: delete
+activate sSession
+sSession --> SessionManager
+destroy sSession
+deactivate sSession
+SessionManager --> eSession
+deactivate SessionManager
+eSession--> Mux: response
+deactivate eSession
+note left
+HTTP/1.1 204 NO CONTENT
+end note
+@enduml

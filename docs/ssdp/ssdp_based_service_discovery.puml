@@ -1,0 +1,55 @@
+@startuml
+
+box "PODM"
+    participant DiscoveryModule
+end box
+box "Psme rest server" #LightBlue
+    participant App
+    participant SsdpService
+    participant SsdpPacketParser
+    participant "SsdpPacket\nRequest" as Req
+    participant "SsdpPacket\nResponse" as Res
+end box
+
+App -> App: load ssdp configuration
+create SsdpService
+App -> SsdpService: create (SsdpServiceConfiguration)
+App -> SsdpService: start
+
+SsdpService -> SsdpService: open listening socket
+
+SsdpService -> SsdpService: start thread processing requests
+
+DiscoveryModule -> SsdpService : M-SEARCH multicast request
+note left
+M-SEARCH * HTTP/1.1
+Host:239.255.255.250:1900
+ST:urn:dmtf-org:service:redfish-rest:1
+MAN:"ssdp:discover"
+MX:3
+end note
+
+SsdpService -> SsdpPacketParser: parse request
+create Req
+SsdpPacketParser -> Req: create
+
+SsdpService -> Req: is_valid
+Req --> SsdpService: ok
+
+create Res
+SsdpService -> Res: create response
+SsdpService -> SsdpService: send_or_enqueue (SsdpPacket Response)
+note left
+random delay in seconds between 0 and MX value of request
+end note
+SsdpService -> DiscoveryModule: send response
+note left
+HTTP/1.1 200 OK
+CACHE-CONTROL:<in seconds>
+ST:urn:dmtf-org:service:redfish-rest:1
+USN:uuid:<UUID of service root>::urn:dmtf-org:service:redfish-rest:1
+AL:https://<IP address>:<Port>/redfish/v1
+EXT:
+end note
+
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+package "rest::security::authentication" #DDDDDD {
+  Authentication <|-- BasicAuthentication
+  Authentication <|-- SessionAuthentication
+  Authentication <|-- ClientCertAuthentication
+}
+@enduml

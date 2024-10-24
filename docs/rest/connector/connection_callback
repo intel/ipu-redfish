@@ -1,0 +1,72 @@
+@startuml
+actor caller
+box "MHD Connector"
+participant "handler_function()" as h
+participant Connector
+end box
+participant Authentication
+participant Request
+participant Response
+participant Mux
+
+note over Authentication
+Appropriate authentication method (class)
+based on configuration.json
+end note
+
+caller -> h: http_request
+
+h -> h: collect request parameters
+note left
+(http request with multiple chunks - partial payload)
+end note
+
+h -> Connector: is_unauthenticated_access_feasible
+Connector -> Connector: **m_public_access_callback**
+Connector -> Mux: check_public_access
+note over Mux
+check if given url and method
+is publicly available
+end note
+Mux --> Connector
+Connector --> h
+
+alt NO
+h -> Connector: is_authentication_enabled
+Connector --> h
+alt YES
+h -> Authentication: authenticate
+Authentication --> h
+alt AuthStatus::FAIL
+Authentication --> h
+h --> caller: <color #FFBB00>401 UNAUTHORIZED</color>
+else AuthStatus::SUCCESS
+
+end
+
+else NO
+end
+else YES
+
+end
+
+create Request
+h -> Request: create
+activate Request
+h -> Request: set parameters
+Request --> h
+deactivate Request
+create Response
+h -> Response: create
+activate Response
+Response --> h
+deactivate Response
+h -> Connector: handle(request, response)
+Connector -> Connector: **m_callback**
+Connector -> Mux: forward_to_handler
+note over Mux
+execute requested endpoint method
+end note
+Mux --> Connector
+Connector -->h
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+
+group Session Authentication
+
+participant Connector
+participant SessionAuthentication as sessionA
+box "SessionService model" #LightBlue
+participant SessionManager
+participant "SessionCollection" as sSessionColl
+participant "Session" as sSession
+end box
+Connector -> sessionA: authenticate
+note left
+GET https://<IP>:<PORT>/redfish/v1/<protected_resource>
+Content-Type: application/json
+Origin: http://<IP>:<PORT>
+X-Auth-Token: df4a798e-b682-11e8-a530-7f761645d11e
+end note
+activate sessionA
+sessionA -> sessionA: perform
+activate sessionA
+sessionA -> SessionManager: is_session_valid(session)
+SessionManager -> sSessionColl: find_session(session.origin, session.token)
+alt FOUND
+sSession --> SessionManager
+SessionManager -> sSession: is_session_valid(timeout)
+alt VALID
+SessionManager -> sSession: update_last_used_time
+SessionManager --> sessionA: YES
+else INVALID
+SessionManager -> sSessionColl: erase(session)
+sSessionColl --> SessionManager
+SessionManager -> sessionA: NO
+note left
+401 UNAUTHORIZED
+end note
+end
+else NOT FOUND
+SessionManager -> sessionA: NO
+note left
+401 UNAUTHORIZED
+end note
+end
+activate SessionManager
+deactivate SessionManager
+deactivate sessionA
+sessionA -->Connector: AuthStatus::FAIL/SUCCESS
+deactivate sessionA
+
+
+end
+
+@enduml

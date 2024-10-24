@@ -1,0 +1,88 @@
+@startuml
+group Create Session
+participant Mux as Mux
+box "Endpoint" #LightGreen
+participant "SessionCollection" as eSessionColl
+end box
+
+box "Model" #LightBlue
+participant "session::Session" as sSession
+participant SessionManager
+participant "SessionManager::SessionMap" as SessionMap
+participant "SessionServiceManager" as SessionServiceManager
+participant "AccountManager" as AccountManager
+end box
+participant JsonValidator
+
+Mux-> eSessionColl: executeHandler
+activate eSessionColl
+note left
+POST /redfish/v1/SessionService/Sessions
+Origin: https://10.102.88.61:443
+Content-Type: application/json
+{
+  "UserName": "userX",
+  "Password": "some_password"
+}
+end note
+eSessionColl -> SessionServiceManager: is_service_enabled
+activate SessionServiceManager
+note right
+if NOT OK
+400 BAD_REQUEST
+end note
+SessionServiceManager --> eSessionColl: OK
+deactivate SessionServiceManager
+eSessionColl -> JsonValidator: validate_request_body(request)
+note right
+if INVALID
+appropriate error message
+end note
+activate JsonValidator
+JsonValidator --> eSessionColl: VALID
+deactivate JsonValidator
+eSessionColl -> AccountManager: validate_credentials
+activate AccountManager
+note right
+if NOT OK
+401 UNAUTHORIZED
+end note
+AccountManager --> eSessionColl: OK
+deactivate AccountManager
+create sSession
+eSessionColl -> sSession: create(userName)
+activate sSession
+eSessionColl -> sSession: set_origin_header
+eSessionColl -> SessionManager: add(session)
+activate SessionManager
+SessionManager -> SessionManager: get_next_id
+activate SessionManager
+SessionManager -> sSession: setId
+deactivate SessionManager
+SessionManager -> SessionManager: generate_token
+activate SessionManager
+SessionManager -> sSession: set_auth_token
+deactivate SessionManager
+SessionManager -> sSession: update_last_used
+SessionManager -> SessionMap: insert(session)
+deactivate sSession
+SessionManager --> eSessionColl: session_id
+deactivate SessionManager
+eSessionColl --> Mux: response
+deactivate eSessionColl
+note left
+HTTP/1.1 201 Created
+Location: http://<IP>:<PORT/redfish/v1/SessionService/Sessions/Session1
+X-Auth-Token: <session-auth-token>
+{
+   "@odata.context": "/redfish/v1/$metadata#Session.Session",
+   "@odata.id": "/redfish/v1/SessionService/Sessions/Session1",
+   "@odata.type": "#Session.v1_0_0.Session",
+   "Id": "Session1",
+   "Name": "User Session",
+   "Description": "User Session",
+   "UserName": "userX"
+}
+end note
+end
+@enduml

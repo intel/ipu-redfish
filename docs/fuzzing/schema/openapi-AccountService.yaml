@@ -1,0 +1,3233 @@
+components:
+  schemas:
+    RedfishError:
+      description: The error payload from a Redfish service.
+      properties:
+        error:
+          description: The properties that describe an error from a Redfish service.
+          properties:
+            '@Message.ExtendedInfo':
+              description: An array of messages describing one or more error messages.
+              items:
+                $ref: Message.v1_2_0.yaml#/components/schemas/Message_v1_2_0_Message
+              type: array
+              x-longDescription: This property shall be an array of message objects
+                describing one or more error messages.
+            code:
+              description: A string indicating a specific MessageId from a message
+                registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a string indicating a
+                specific MessageId from a message registry.
+            message:
+              description: A human-readable error message corresponding to the message
+                in a message registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a human-readable error
+                message corresponding to the message in a message registry.
+          required:
+          - code
+          - message
+          type: object
+          x-longDescription: The Redfish Specification-described type shall contain
+            properties that describe an error from a Redfish service.
+      required:
+      - error
+      type: object
+      x-longDescription: The Redfish Specification-described type shall contain an
+        error payload from a Redfish service.
+info:
+  contact:
+    name: DMTF
+    url: https://www.dmtf.org/standards/redfish
+  description: This contains the definition of a Redfish service.
+  title: Redfish
+  version: '2023.3'
+  x-copyright: Copyright 2023 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright
+openapi: 3.0.1
+paths:
+  /redfish/v1/AccountService:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: AccountService.v1_15_0.yaml#/components/schemas/AccountService_v1_15_0_AccountService
+          description: The response contains a representation of the AccountService
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: AccountService.v1_15_0.yaml#/components/schemas/AccountService_v1_15_0_AccountService
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: AccountService.v1_15_0.yaml#/components/schemas/AccountService_v1_15_0_AccountService
+          description: The response contains a representation of the AccountService
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: AccountService.v1_15_0.yaml#/components/schemas/AccountService_v1_15_0_AccountService
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: AccountService.v1_15_0.yaml#/components/schemas/AccountService_v1_15_0_AccountService
+          description: The response contains a representation of the AccountService
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccountCollection.yaml#/components/schemas/ManagerAccountCollection_ManagerAccountCollection
+          description: The response contains a representation of the ManagerAccountCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+          description: A resource of type ManagerAccount has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+          description: The response contains a representation of the ManagerAccount
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+          description: The response contains a representation of the ManagerAccount
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+          description: The response contains a representation of the ManagerAccount
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ManagerAccount
+          description: The response contains a representation of the ManagerAccount
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Actions/ManagerAccount.ChangePassword:
+    post:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ManagerAccount.v1_12_0.yaml#/components/schemas/ManagerAccount_v1_12_0_ChangePasswordRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the ChangePassword action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: The response contains the results of the ChangePassword action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Certificates:
+    get:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Certificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Certificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Keys:
+    get:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: KeyCollection.yaml#/components/schemas/KeyCollection_KeyCollection
+          description: The response contains a representation of the KeyCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: A resource of type Key has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Accounts/{ManagerAccountId}/Keys/{KeyId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the ManagerAccount resource
+        in: path
+        name: ManagerAccountId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Key resource
+        in: path
+        name: KeyId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Key.v1_4_0.yaml#/components/schemas/Key_v1_4_0_Key
+          description: The response contains a representation of the Key resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ActiveDirectory/Certificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ActiveDirectory/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ActiveDirectory/Certificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ActiveDirectory/Certificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ExternalAccountProviders:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProviderCollection.yaml#/components/schemas/ExternalAccountProviderCollection_ExternalAccountProviderCollection
+          description: The response contains a representation of the ExternalAccountProviderCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+          description: A resource of type ExternalAccountProvider has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ExternalAccountProviders/{ExternalAccountProviderId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+          description: The response contains a representation of the ExternalAccountProvider
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+          description: The response contains a representation of the ExternalAccountProvider
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+          description: The response contains a representation of the ExternalAccountProvider
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ExternalAccountProvider.v1_7_1.yaml#/components/schemas/ExternalAccountProvider_v1_7_1_ExternalAccountProvider
+          description: The response contains a representation of the ExternalAccountProvider
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ExternalAccountProviders/{ExternalAccountProviderId}/Certificates:
+    get:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/ExternalAccountProviders/{ExternalAccountProviderId}/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/ExternalAccountProviders/{ExternalAccountProviderId}/Certificates/{CertificateId}/Actions/Certificate.Rekey
+  : post:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/ExternalAccountProviders/{ExternalAccountProviderId}/Certificates/{CertificateId}/Actions/Certificate.Renew
+  : post:
+      parameters:
+      - description: The value of the Id property of the ExternalAccountProvider resource
+        in: path
+        name: ExternalAccountProviderId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/LDAP/Certificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/LDAP/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/LDAP/Certificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/LDAP/Certificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/ClientCertificate/Certificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/ClientCertificate/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/ClientCertificate/Certificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/ClientCertificate/Certificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/SecurID/Certificates:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/SecurID/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/SecurID/Certificates/{CertificateId}/Actions/Certificate.Rekey:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/MultiFactorAuth/SecurID/Certificates/{CertificateId}/Actions/Certificate.Renew:
+    post:
+      parameters:
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnectionCollection.yaml#/components/schemas/OutboundConnectionCollection_OutboundConnectionCollection
+          description: The response contains a representation of the OutboundConnectionCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+          description: A resource of type OutboundConnection has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+          description: The response contains a representation of the OutboundConnection
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+          description: The response contains a representation of the OutboundConnection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+          description: The response contains a representation of the OutboundConnection
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: OutboundConnection.v1_0_1.yaml#/components/schemas/OutboundConnection_v1_0_1_OutboundConnection
+          description: The response contains a representation of the OutboundConnection
+            resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/Certificates:
+    get:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/Certificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/Certificates/{CertificateId}/Actions/Certificate.Rekey
+  : post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/Certificates/{CertificateId}/Actions/Certificate.Renew
+  : post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/ClientCertificates:
+    get:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: CertificateCollection.yaml#/components/schemas/CertificateCollection_CertificateCollection
+          description: The response contains a representation of the CertificateCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: A resource of type Certificate has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/ClientCertificates/{CertificateId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_Certificate
+          description: The response contains a representation of the Certificate resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/ClientCertificates/{CertificateId}/Actions/Certificate.Rekey
+  : post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RekeyResponse
+          description: The response contains the results of the Rekey action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  ? /redfish/v1/AccountService/OutboundConnections/{OutboundConnectionId}/ClientCertificates/{CertificateId}/Actions/Certificate.Renew
+  : post:
+      parameters:
+      - description: The value of the Id property of the OutboundConnection resource
+        in: path
+        name: OutboundConnectionId
+        required: true
+        schema:
+          type: string
+      - description: The value of the Id property of the Certificate resource
+        in: path
+        name: CertificateId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewRequestBody
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Certificate.v1_8_1.yaml#/components/schemas/Certificate_v1_8_1_RenewResponse
+          description: The response contains the results of the Renew action
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Roles:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: RoleCollection.yaml#/components/schemas/RoleCollection_RoleCollection
+          description: The response contains a representation of the RoleCollection
+            resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+          description: A resource of type Role has been created
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/AccountService/Roles/{RoleId}:
+    delete:
+      parameters:
+      - description: The value of the Id property of the Role resource
+        in: path
+        name: RoleId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+          description: The response contains a representation of the Role resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    get:
+      parameters:
+      - description: The value of the Id property of the Role resource
+        in: path
+        name: RoleId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+          description: The response contains a representation of the Role resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    patch:
+      parameters:
+      - description: The value of the Id property of the Role resource
+        in: path
+        name: RoleId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+          description: The response contains a representation of the Role resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+    put:
+      parameters:
+      - description: The value of the Id property of the Role resource
+        in: path
+        name: RoleId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: Role.v1_3_1.yaml#/components/schemas/Role_v1_3_1_Role
+          description: The response contains a representation of the Role resource
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: Task.v1_7_3.yaml#/components/schemas/Task_v1_7_3_Task
+          description: Accepted; a task has been generated
+        '204':
+          description: Success, but no response data
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition

@@ -1,0 +1,138 @@
+components:
+  schemas:
+    RedfishError:
+      description: The error payload from a Redfish service.
+      properties:
+        error:
+          description: The properties that describe an error from a Redfish service.
+          properties:
+            '@Message.ExtendedInfo':
+              description: An array of messages describing one or more error messages.
+              items:
+                $ref: Message.v1_2_0.yaml#/components/schemas/Message_v1_2_0_Message
+              type: array
+              x-longDescription: This property shall be an array of message objects
+                describing one or more error messages.
+            code:
+              description: A string indicating a specific MessageId from a message
+                registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a string indicating a
+                specific MessageId from a message registry.
+            message:
+              description: A human-readable error message corresponding to the message
+                in a message registry.
+              readOnly: true
+              type: string
+              x-longDescription: This property shall contain a human-readable error
+                message corresponding to the message in a message registry.
+          required:
+          - code
+          - message
+          type: object
+          x-longDescription: The Redfish Specification-described type shall contain
+            properties that describe an error from a Redfish service.
+      required:
+      - error
+      type: object
+      x-longDescription: The Redfish Specification-described type shall contain an
+        error payload from a Redfish service.
+info:
+  contact:
+    name: DMTF
+    url: https://www.dmtf.org/standards/redfish
+  description: This contains the definition of a Redfish service.
+  title: Redfish
+  version: '2023.3'
+  x-copyright: Copyright 2023 DMTF. For the full DMTF copyright policy, see http://www.dmtf.org/about/policies/copyright
+openapi: 3.0.1
+paths:
+  /redfish/v1:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ServiceRoot.v1_16_1.yaml#/components/schemas/ServiceRoot_v1_16_1_ServiceRoot
+          description: The response contains a representation of the ServiceRoot resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: ServiceRoot.v1_16_1.yaml#/components/schemas/ServiceRoot_v1_16_1_ServiceRoot
+          description: The response contains a representation of the ServiceRoot resource
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/$metadata:
+    get:
+      responses:
+        '200':
+          content:
+            application/xml: {}
+          description: OData $metadata.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
+  /redfish/v1/odata:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: The OData service document from a Redfish service.
+                properties:
+                  '@odata.context':
+                    $ref: odata-v4.yaml#/components/schemas/odata-v4_context
+                  value:
+                    description: The list of services provided by the Redfish service.
+                    items:
+                      properties:
+                        kind:
+                          description: Type of resource.  Value is `Singleton` for
+                            all cases defined by Redfish.
+                          readOnly: true
+                          type: string
+                        name:
+                          description: User-friendly resource name of the resource.
+                          readOnly: true
+                          type: string
+                        url:
+                          description: Relative URL for the top-level resource.
+                          readOnly: true
+                          type: string
+                      required:
+                      - name
+                      - kind
+                      - url
+                      type: object
+                    type: array
+                required:
+                - '@odata.context'
+                - value
+                type: object
+          description: OData service document
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedfishError'
+          description: Error condition
