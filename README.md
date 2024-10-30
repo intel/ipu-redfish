@@ -1,6 +1,6 @@
-# Redfish Server for Intel® Infrastructure Processing Unit SoC E2100
+# Redfish® Server for Intel® Infrastructure Processing Unit SoC E2100
 
-This repository contains the source code for the Redfish Server for the Intel® Internet Processing Unit (IPU) SoC E2100.
+This repository contains the source code for the Redfish Server for the Intel Internet Processing Unit (IPU) SoC E2100.
 This is an official public release mirror repository.
 
 The current `main` branch contains the full release code. To build it, you need to obtain a copy of the Intel IPU software development kit (SDK), available 
