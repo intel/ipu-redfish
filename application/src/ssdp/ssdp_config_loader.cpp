@@ -31,11 +31,8 @@
 namespace {
 
 std::string get_service_url(const json::Json& config) {
-    std::string service_url{};
-    for (const auto& conn_options : psme::rest::server::load_connectors_options(config)) {
-        service_url += "https://localhost:" + std::to_string(int(conn_options.get_port())) + psme::rest::constants::PathParam::BASE_URL;
-        break;
-    }
+    auto port = psme::rest::server::load_server_options(config).get_port();
+    std::string service_url = "https://localhost:" + std::to_string(int(port)) + psme::rest::constants::PathParam::BASE_URL;
     return service_url;
 }
 
@@ -54,11 +51,8 @@ SsdpServiceConfig load_ssdp_config(const json::Json& config, const std::string& 
     }
     auto announce_interval = seconds(ssdp_config.value("announce-interval-seconds", uint16_t{}));
     ssdp_service_config.set_announce_interval(announce_interval);
-    if (config.count("server") && config["server"].count("network-interface-name")) {
-        for (const auto& nic_name : config["server"]["network-interface-name"]) {
-            ssdp_service_config.add_nic_name(nic_name.get<std::string>());
-        }
-    }
+    const auto& nic_name = config["server"]["network-interface-name"];
+    ssdp_service_config.add_nic_name(nic_name.get<std::string>());
     ssdp_service_config.set_socket_ttl(ssdp_config.value("ttl", std::uint8_t{}));
     ssdp_service_config.set_service_uuid(uuid);
     ssdp_service_config.set_service_urn("urn:dmtf-org:service:redfish-rest:1");

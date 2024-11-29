@@ -10,10 +10,12 @@
 #include "agent-framework/module/model/virtual_media.hpp"
 #include "ipu/curl_handler.hpp"
 #include "ipu/ipu_constants.hpp"
+#include "psme/rest/server/error/error_factory.hpp"
 #include <filesystem>
 #include <system_error>
 
 using namespace psme::ipu::constants;
+using namespace psme::rest::error;
 using namespace agent_framework::database;
 
 namespace psme {
@@ -148,9 +150,9 @@ void VirtualMediaInsertHandler::update_virtual_media() {
     entity.put(DOWNLOADED_IMAGE_NAME, img_filename);
 }
 
-void VirtualMediaInsertHandler::update(const std::string& img, const agent_framework::model::enums::TransferMethod& transfer_method,
-                                       const OptionalField<std::string>& username,
-                                       const OptionalField<std::string>& password) {
+void VirtualMediaInsertHandler::update_info(const std::string& img, const agent_framework::model::enums::TransferMethod& transfer_method,
+                                            const OptionalField<std::string>& username,
+                                            const OptionalField<std::string>& password) {
     m_img = img;
     m_transfer_method = transfer_method;
     m_username = username;
@@ -158,6 +160,7 @@ void VirtualMediaInsertHandler::update(const std::string& img, const agent_frame
 }
 
 void VirtualMediaInsertHandler::add_completion_message(const std::string& task_uuid) {
+    m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>().get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{agent_framework::model::attribute::Message{
         "Base.1.18.Success",
@@ -171,6 +174,7 @@ void VirtualMediaInsertHandler::add_completion_message(const std::string& task_u
 }
 
 void VirtualMediaInsertHandler::add_exception_message(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex) {
+    m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>().get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{agent_framework::model::attribute::Message{
         "Base.1.18.GeneralError",
@@ -181,6 +185,12 @@ void VirtualMediaInsertHandler::add_exception_message(const std::string& task_uu
         agent_framework::model::attribute::Message::MessageArgs{}}};
     task->set_messages(messages);
     log_info("ipu", "Virtual Media insert failed.");
+}
+
+void VirtualMediaInsertHandler::try_lock() {
+    if (m_lock.test_and_set()) {
+        throw ServerException(ErrorFactory::create_resource_in_use_error("Unable to perform several virtual media insert tasks simultaneously."));
+    }
 }
 
 } // namespace ipu

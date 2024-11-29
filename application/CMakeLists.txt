@@ -57,6 +57,7 @@ install(
     FILES config/ipu-redfish-generate-test-certs.sh
           config/ipu-redfish-generate-password-hash.sh
           config/ipu-redfish-service.sh
+          config/ipu-redfish-upgrade-config.py
     DESTINATION usr/bin
     PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
 )

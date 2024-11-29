@@ -34,7 +34,6 @@ set(AGENT_FRAMEWORK_INCLUDE_DIRS
 
 add_library(agent-framework STATIC
     src/logger_loader.cpp
-    src/signal.cpp
 )
 
 target_link_libraries(agent-framework

@@ -50,15 +50,15 @@ if(NOT nettle_POPULATED AND NOT nettle_FOUND)
 
     # Configure
     execute_process(
-        COMMAND ${nettle_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
+        COMMAND ${nettle_SOURCE_DIR}/configure ${CONFIGURE_FLAGS} --cache-file=../configure.cache
         WORKING_DIRECTORY ${nettle_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    # Build
+    # generated Makefile is broken - it assumes desdata target is built
     execute_process(
-        COMMAND make ${BUILD_EXTRA_ARGS}
+        COMMAND make desdata ${BUILD_EXTRA_ARGS}
         WORKING_DIRECTORY ${nettle_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
@@ -66,7 +66,7 @@ if(NOT nettle_POPULATED AND NOT nettle_FOUND)
 
     # Install
     execute_process(
-        COMMAND make install
+        COMMAND make install ${BUILD_EXTRA_ARGS}
         WORKING_DIRECTORY ${nettle_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET

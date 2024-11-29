@@ -41,13 +41,6 @@ namespace rest {
 namespace server {
 
 /*!
- * @brief Default Connector callback for request processing if none is provided via Connector::set_callback method.
- *
- * This callback returns method not allowed error response.
- * */
-void default_callback(const Request& request, Response& response);
-
-/*!
  * @brief Connector represents the interface between external clients
  * sending requests to (and receiving responses from) REST server.
  *

@@ -57,16 +57,22 @@ void AccBootOptionGetter::get_boot_state(const json::Json& file_config) {
 
     auto& state = file_config[constants::STATE];
 
-    switch (enums::State::from_string(state)) {
-    case enums::State::OneTimeOverride:
-        system->set_boot_override(BootOverride::Once);
-        break;
-    case enums::State::ContinuousOverride:
-        system->set_boot_override(BootOverride::Continuous);
-        break;
-    default:
+    try {
+        switch (enums::State::from_string(state)) {
+        case enums::State::OneTimeOverride:
+            system->set_boot_override(BootOverride::Once);
+            break;
+        case enums::State::ContinuousOverride:
+            system->set_boot_override(BootOverride::Continuous);
+            break;
+        default:
+            system->set_boot_override(BootOverride::Disabled);
+            break;
+        }
+    }
+    catch (const agent_framework::exceptions::InvalidValue& ex) {
+        log_info("ipu", "Boot option file " << constants::ACC_BOOT_OPTION_FILEPATH << " is malformed.");
         system->set_boot_override(BootOverride::Disabled);
-        break;
     }
 }
 
@@ -87,13 +93,19 @@ void AccBootOptionGetter::get_boot_type(const json::Json& file_config) {
 
     const auto& boot_type = file_config[constants::BOOT_TYPE];
 
-    switch (enums::BootType::from_string(boot_type)) {
-    case enums::BootType::DramBoot:
-        system->set_boot_override_target(BootOverrideTarget::Cd);
-        break;
-    default:
+    try {
+        switch (enums::BootType::from_string(boot_type)) {
+        case enums::BootType::DramBoot:
+            system->set_boot_override_target(BootOverrideTarget::Cd);
+            break;
+        default:
+            system->set_boot_override_target(BootOverrideTarget::None);
+            break;
+        }
+    }
+    catch (const agent_framework::exceptions::InvalidValue& ex) {
+        log_info("ipu", "Boot option file " << constants::ACC_BOOT_OPTION_FILEPATH << " is malformed.");
         system->set_boot_override_target(BootOverrideTarget::None);
-        break;
     }
 }
 

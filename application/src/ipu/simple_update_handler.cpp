@@ -5,6 +5,8 @@
 #include "agent-framework/action/task_runner.hpp"
 #include "agent-framework/module/managers/utils/manager_utils.hpp"
 #include "psme/rest/endpoints/task_service/monitor_content_builder.hpp"
+#include "psme/rest/server/error/error_factory.hpp"
+#include "psme/rest/server/error/server_exception.hpp"
 
 #include "ipu/curl_handler.hpp"
 #include "ipu/ipu_constants.hpp"
@@ -14,6 +16,7 @@
 using namespace psme::rest;
 using namespace psme::ipu::constants;
 using namespace psme::ipu;
+using namespace psme::rest::error;
 
 namespace psme {
 namespace ipu {
@@ -88,6 +91,7 @@ void SimpleUpdateHandler::update_info(const std::string& img,
 }
 
 void SimpleUpdateHandler::completion_handler(const std::string& task_uuid) {
+    m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>()
                     .get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{
@@ -101,6 +105,7 @@ void SimpleUpdateHandler::completion_handler(const std::string& task_uuid) {
 }
 
 void SimpleUpdateHandler::exception_handler(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex) {
+    m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>()
                     .get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{
@@ -113,6 +118,12 @@ void SimpleUpdateHandler::exception_handler(const std::string& task_uuid, const 
     task->set_messages(messages);
     log_info("ipu", "Update procedure failed.");
     remove_package();
+}
+
+void SimpleUpdateHandler::try_lock() {
+    if (m_lock.test_and_set()) {
+        throw ServerException(ErrorFactory::create_resource_in_use_error("Unable to execute several update tasks simultaneously."));
+    }
 }
 
 } // namespace ipu

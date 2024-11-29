@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (C) 2024 Intel Corporation
+
 # This script is used to generate a password hash for the Redfish service
 
 redfish_encrypt_utility="/usr/bin/ipu-redfish-encrypt-utility"

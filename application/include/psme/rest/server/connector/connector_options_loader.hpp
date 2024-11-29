@@ -26,11 +26,11 @@ namespace rest {
 namespace server {
 
 /*!
- * Connector options loader
+ * Server options loader
  * @param config JSON configuration
- * @return Collection of connector options read from configuration
+ * @return Server options read from configuration
  */
-ConnectorOptionsVec load_connectors_options(const json::Json& config);
+ConnectorOptions load_server_options(const json::Json& config);
 
 } // namespace server
 } // namespace rest

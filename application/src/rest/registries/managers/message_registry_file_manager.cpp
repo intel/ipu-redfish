@@ -58,6 +58,8 @@ const MessageRegistryFile& MessageRegistryFileManager::get_file_by_id(uint64_t f
 }
 
 MessageRegistryFileManager::MessageRegistryFiles MessageRegistryFileManager::get_files() const {
+    std::lock_guard<std::recursive_mutex> lock{m_mutex};
+
     MessageRegistryFiles files{};
 
     for (UuidToRegistryFileMap::const_iterator it = m_uuid_to_registry_file_map.begin();
@@ -69,6 +71,7 @@ MessageRegistryFileManager::MessageRegistryFiles MessageRegistryFileManager::get
 }
 
 std::size_t MessageRegistryFileManager::get_count() const {
+    std::lock_guard<std::recursive_mutex> lock{m_mutex};
     return m_uuid_to_registry_file_map.size();
 }
 

@@ -10,10 +10,7 @@ The plan is to have it installed in `/etc/` by default.
 Set `"network-interface-name"` to the Linux name of the network interface on which
 you want Redfish server to respond. By default, it points to the I211 1G adapter.
 
-It may be possible for the Redfish server to respond on multiple interfaces / IP addresses,
-however this scenario is not tested, so it is recommeded to only have one "network-interface-name" specified.
-
-In `"connectors"` section:
+In `"server"` section:
 
 Set `"port"` to the TCP port where you want Redfish to respond.
 

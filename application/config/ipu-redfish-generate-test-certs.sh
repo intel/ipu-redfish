@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright (C) 2024 Intel Corporation
+
 echo "This script generates an insecure (self-signed) certificate for the IPU Redfish Server."
 echo "Its purpose is to allow users to try out the IPU Redfish Server without creating and provisioning proper certificates."
 echo "Do you wish to proceed? (Y/N)"
@@ -33,5 +36,5 @@ echo "Private authentication key generated: $KEY_FILE"
 
 # Generate a Self-Signed Certificate from the private key
 # -days 25555: 70 years - MEV-TS boots in 1970
-openssl req -new -x509 -key "$KEY_FILE" -out "$CRT_FILE" -days 25555 -sha384 -subj "/C=PL/ST=Pomorskie/L=Gdansk/O=Test/OU=Do Not Use In Production/CN=localhost"
+openssl req -new -x509 -key "$KEY_FILE" -out "$CRT_FILE" -days 25555 -sha384 -subj "/C=PL/ST=Pomorskie/L=Gdansk/O=Test/OU=Do Not Use In Production"
 echo "Self-signed certificate generated: $CRT_FILE"

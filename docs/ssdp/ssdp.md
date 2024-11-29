@@ -31,7 +31,7 @@ psme-rest-server-configuration.json excerpt for SSDP service:
 
         {
             "server" : {
-                "network-interface-name" : ["enp0s20f0.4094"]
+                "network-interface-name" : "enp0s20f0.4094"
                 ...
             }
             ...
@@ -39,10 +39,6 @@ psme-rest-server-configuration.json excerpt for SSDP service:
                 "enabled" : true,
                 "announce-interval-seconds" : 0,
                 "ttl" : 2
-            }
-            ...
-            "rest" : {
-                "service-root-name" : "PSME Service Root"
             }
             ...
         }

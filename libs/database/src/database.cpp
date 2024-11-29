@@ -35,7 +35,7 @@ const std::chrono::seconds Database::NEVER{INT64_MAX};
 
 const std::string Database::EMPTY{""};
 
-std::string Database::default_location = "/var/opt/psme";
+std::string Database::default_location = "";
 
 void Database::set_default_location(const std::string& location) {
     default_location = location;

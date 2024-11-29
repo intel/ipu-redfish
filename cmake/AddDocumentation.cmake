@@ -26,28 +26,7 @@ endif()
 
 set(GENERATE_DOCUMENTATION_USED TRUE)
 
-set(DOXYGEN_COMMAND doxygen)
-
 add_custom_target(doc-generate
-    COMMAND ${DOXYGEN_COMMAND} doxygen.config
-    COMMAND ${CMAKE_COMMAND} -E copy_directory doc
-        ${CMAKE_CURRENT_BINARY_DIR}/doc
-    COMMAND ${CMAKE_COMMAND} -E remove_directory doc
+    COMMAND doxygen Doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-add_custom_target(doc-clean
-    COMMAND ${CMAKE_COMMAND} -E remove_directory doc
-)
-
-add_custom_target(doc-dev-generate
-    COMMAND ${DOXYGEN_COMMAND} doxygen-dev.config
-    COMMAND ${CMAKE_COMMAND} -E copy_directory doc-dev
-        ${CMAKE_CURRENT_BINARY_DIR}/doc-dev
-    COMMAND ${CMAKE_COMMAND} -E remove_directory doc-dev
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-add_custom_target(doc-dev-clean
-    COMMAND ${CMAKE_COMMAND} -E remove_directory doc-dev
 )

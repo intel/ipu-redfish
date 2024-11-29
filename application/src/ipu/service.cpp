@@ -33,6 +33,7 @@ void Service::trigger_ipu_update(const std::string& img,
                                  const OptionalField<std::string>& username,
                                  const OptionalField<std::string>& password,
                                  std::string& task_uuid) {
+    m_simple_update_handler.try_lock();
     m_simple_update_handler.update_info(img, username, password);
     m_simple_update_handler.invoke_update(task_uuid);
 }
@@ -47,7 +48,8 @@ void Service::insert_virtual_media(const std::string& img, const enums::Transfer
                                    const OptionalField<std::string>& username,
                                    const OptionalField<std::string>& password,
                                    std::string& uuid) {
-    m_virtual_media_insert_handler.update(img, transfer_method, username, password);
+    m_virtual_media_insert_handler.try_lock();
+    m_virtual_media_insert_handler.update_info(img, transfer_method, username, password);
     m_virtual_media_insert_handler.run(uuid);
 }
 

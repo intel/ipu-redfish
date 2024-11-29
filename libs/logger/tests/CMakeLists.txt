@@ -19,20 +19,12 @@
 #
 # </license_header>
 
-if (NOT GTEST_FOUND)
+if (NOT ENABLE_TESTS)
     return()
 endif()
 
 add_gtest(logger logger
-    test_runner.cpp
     logger_test.cpp
 )
 
 target_link_libraries(${test_target} logger)
-
-add_custom_target(unittest_logger
-                  make
-)
-add_custom_target(unittest_logger_run
-                  ctest --output-on-failure
-)

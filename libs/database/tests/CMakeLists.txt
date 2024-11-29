@@ -19,12 +19,11 @@
 #
 # </license_header>
 
-if (NOT GTEST_FOUND)
+if (NOT ENABLE_TESTS)
     return()
 endif()
 
 add_gtest(test database
-    test_runner.cpp
     database_test.cpp
     aggregate_test.cpp
 )

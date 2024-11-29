@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <string>
 
 namespace psme {
@@ -19,6 +20,7 @@ public:
     void update_info(const std::string& img,
                      const OptionalField<std::string>& username,
                      const OptionalField<std::string>& password);
+    void try_lock();
 private:
     void download_package();
     void update_ipu();
@@ -29,6 +31,7 @@ private:
     std::string m_img{};
     OptionalField<std::string> m_username{};
     OptionalField<std::string> m_password{};
+    std::atomic_flag m_lock{ATOMIC_FLAG_INIT};
 };
 
 } // namespace ipu

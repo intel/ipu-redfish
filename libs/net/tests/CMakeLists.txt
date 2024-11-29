@@ -19,12 +19,11 @@
 #
 # </license_header>
 
-if (NOT GTEST_FOUND)
+if (NOT ENABLE_TESTS)
     return()
-endif ()
+endif()
 
 add_gtest(test net
-    test_runner.cpp
     ipaddress_test.cpp
     socketaddress_test.cpp
     multicast_socket_test.cpp

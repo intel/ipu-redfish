@@ -35,7 +35,6 @@ using namespace agent_framework::model::enums;
 namespace {
 
 constexpr const char SERVER[] = "server";
-constexpr const char CONNECTORS[] = "connectors";
 constexpr const char PORT[] = "port";
 constexpr const int DEFAULT_SSDP_PORT = 1900;
 constexpr const char SSDP_SERVICE[] = "ssdp-service";
@@ -85,11 +84,9 @@ json::Json make_prototype() {
 void read_protocols_for_drawer_manager(json::Json& r) {
     r[constants::NetworkProtocol::HTTPS][constants::NetworkProtocol::PROTOCOL_ENABLED] = true;
 
-    const auto connectors = configuration::Configuration::get_instance().to_json()[SERVER][CONNECTORS];
-    for (const auto& connector : connectors) {
-        r[constants::NetworkProtocol::HTTPS][constants::NetworkProtocol::PORT] =
-            connector.value(PORT, std::uint16_t{});
-    }
+    const auto server = configuration::Configuration::get_instance().to_json()[SERVER];
+    r[constants::NetworkProtocol::HTTPS][constants::NetworkProtocol::PORT] =
+        server.value(PORT, std::uint16_t{});
 }
 
 void read_ssdp_properties_from_config(json::Json& r) {

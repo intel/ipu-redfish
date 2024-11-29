@@ -26,6 +26,7 @@
 
 using namespace psme::rest::server;
 
+constexpr const char ConnectorOptions::NETWORK_INTERFACE_NAME[];
 constexpr const char ConnectorOptions::PORT[];
 constexpr const char ConnectorOptions::CERTS_DIR[];
 constexpr const char ConnectorOptions::CLIENT_CERT_REQUIRED[];
@@ -41,8 +42,8 @@ constexpr const char ConnectorOptions::AUTHENTICATION_TYPE_BASIC_OR_SESSION[];
 constexpr const char ConnectorOptions::THREAD_POOL_SIZE[];
 constexpr const char ConnectorOptions::DEBUG_MODE[];
 
-ConnectorOptions::ConnectorOptions(const json::Json& config, const std::string& network_interface_name)
-    : m_network_interface_name(network_interface_name) {
+ConnectorOptions::ConnectorOptions(const json::Json& config) {
+    m_network_interface_name = config.value(NETWORK_INTERFACE_NAME, std::string{});
     m_port = config.value(PORT, std::uint16_t{});
     const auto& thread_mode = config.value(THREAD_MODE, std::string{});
     if (thread_mode == THREAD_MODE_SELECT) {
@@ -75,8 +76,6 @@ ConnectorOptions::ConnectorOptions(const json::Json& config, const std::string& 
         m_hostname = config.value(HOSTNAME, std::string{});
     }
 }
-
-ConnectorOptions::~ConnectorOptions() {}
 
 const std::string& ConnectorOptions::get_certs_dir() const {
     return m_certs_dir;
