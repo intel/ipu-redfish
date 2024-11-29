@@ -49,23 +49,15 @@ if(NOT libgcrypt_POPULATED AND NOT libgcrypt_FOUND)
 
     # Configure
     execute_process(
-        COMMAND ${libgcrypt_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
+        COMMAND ${libgcrypt_SOURCE_DIR}/configure ${CONFIGURE_FLAGS} --cache-file=../configure.cache
         WORKING_DIRECTORY ${libgcrypt_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    # Build
+    # Build & install
     execute_process(
-        COMMAND make ${BUILD_EXTRA_ARGS}
-        WORKING_DIRECTORY ${libgcrypt_BINARY_DIR}
-        OUTPUT_QUIET
-        ERROR_QUIET
-    )
-
-    # Install
-    execute_process(
-        COMMAND make install
+        COMMAND make ${BUILD_EXTRA_ARGS} install
         WORKING_DIRECTORY ${libgcrypt_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET

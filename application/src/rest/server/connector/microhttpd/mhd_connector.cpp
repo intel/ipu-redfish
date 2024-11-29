@@ -32,11 +32,8 @@
 #include <sstream>
 
 #include <microhttpd.h>
-extern "C" {
-#include <arpa/inet.h>
-#include <netinet/in.h>
-}
 
+using namespace psme::rest;
 using namespace psme::rest::server;
 using namespace psme::rest::security::authentication;
 using namespace psme::rest::error;
@@ -99,6 +96,17 @@ MHD_Result access_handler_callback(void* cls, struct MHD_Connection* connection,
     try {
         log_debug("rest", "HTTP Method " << method);
 
+        const std::string odata_version = "OData-Version";
+        const std::string odata_version_4_0 = "4.0";
+
+        const char* odata_version_str = MHD_lookup_connection_value(connection, MHD_HEADER_KIND, odata_version.c_str());
+        if (odata_version_str && std::string(odata_version_str) != odata_version_4_0) {
+            log_error("rest", "Incorrect OData-Version header in request: " << odata_version_str);
+            Response response;
+            response.set_status(server::status_4XX::PRECONDITION_FAILED);
+            return send_response(connection, response);
+        }
+
         auto* connector = static_cast<MHDConnector*>(cls);
 
         auto deleter = [&con_cls](Request* r) {
@@ -156,6 +164,8 @@ MHD_Result access_handler_callback(void* cls, struct MHD_Connection* connection,
                                   &add_request_headers, request.get());
 
         Response response;
+        response.set_header("Cache-Control", "no-cache");
+        response.set_header(odata_version, odata_version_4_0);
 
         connector->handle(*request, response);
 

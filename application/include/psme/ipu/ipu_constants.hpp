@@ -11,7 +11,7 @@ namespace ipu {
 
 namespace enums {
 ENUM(State, uint32_t, ContinuousOverride, OneTimeOverride, OneTimeOverrideSynced, OneTimeOverrideUpdated);
-ENUM(BootType, uint32_t, DramBoot);
+ENUM(BootType, uint32_t, DramBoot, LocalIscsiBoot, LocalIscsiBoot_ISO, InternalUefiShell, Pxe, Http, Other);
 } // namespace enums
 
 namespace constants {

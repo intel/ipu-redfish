@@ -86,20 +86,22 @@ void ipu_update(const std::string& package_path) {
 
     ipu_update::Result res;
 
-    res = ipu_update::IfutCtxSetLogCallback(ctx, log_callback, vlog_callback);
-    throw_if_not_success(res);
+    try {
+        res = ipu_update::IfutCtxSetLogCallback(ctx, log_callback, vlog_callback);
+        throw_if_not_success(res);
 
-    res = ipu_update::IfutCtxAddPldmFilePath(ctx,
-                                             {package_path.size() + 1 /* include NULL */,
-                                              const_cast<char*>(package_path.c_str())});
-    throw_if_not_success(res);
+        res = ipu_update::IfutCtxAddPldmFilePath(ctx,
+                                                 {package_path.size() + 1 /* include NULL */,
+                                                  const_cast<char*>(package_path.c_str())});
+        throw_if_not_success(res);
 
-    // TODO: remove for release
-    res = ipu_update::IfutCtxSetPartialUpdate(ctx, ipu_update::kComponentRecovery, false);
-    throw_if_not_success(res);
-
-    res = ipu_update::IfutExecuteUpdate(ctx);
-    throw_if_not_success(res);
+        res = ipu_update::IfutExecuteUpdate(ctx);
+        throw_if_not_success(res);
+    }
+    catch (const std::runtime_error& ex) {
+        ipu_update::IfutFreeIfutContext(ctx);
+        throw ex;
+    }
 
     res = ipu_update::IfutFreeIfutContext(ctx);
     throw_if_not_success(res);

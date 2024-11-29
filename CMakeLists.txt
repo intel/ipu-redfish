@@ -20,9 +20,13 @@
 # </license_header>
 
 cmake_minimum_required(VERSION 3.20)
-message(STATUS "Current cmake is ${CMAKE_VERSION}")
+message(STATUS "CMake version is ${CMAKE_VERSION}")
 
-project("PSME FW Build" C CXX)
+project("IPU Redfish Server" C CXX)
+
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+    cmake_policy(SET CMP0135 NEW)
+endif()
 
 if("$ENV{MACHINE}" STREQUAL "aarch64" OR "$ENV{ARCH}" STREQUAL "arm64" )
     message("Setting CMAKE_CROSSCOMPILING")
@@ -111,8 +115,6 @@ include(AddDocumentation)
 # 3rd party components build parameters
 include(ConfigurationPackage)
 
-option(ENABLE_HTTPS "Enable HTTPS support" ON)
-
 find_package(PkgConfig REQUIRED)
 find_package(PackageHandleStandardArgs REQUIRED)
 
@@ -126,7 +128,7 @@ include_directories(${INSTALL}/include)
 
 list(APPEND CMAKE_PREFIX_PATH ${INSTALL})
 
-set(ENV{PKG_CONFIG_PATH} "${INSTALL}/lib/pkgconfig:${INSTALL}/lib64/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+set(ENV{PKG_CONFIG_PATH} "${INSTALL}/lib/pkgconfig:${INSTALL}/lib64/pkgconfig:$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig")
 unset(ENV{PKG_CONFIG_SYSROOT_DIR})
 
 # Find packages built by us or provided by the system
@@ -173,7 +175,7 @@ endif()
 
 # Enable unit testing
 if(CMAKE_CROSSCOMPILING)
-    # empty stub to avoid changin every cmakelists.txt that uses it
+    # empty stub to avoid changing every cmakelists.txt that uses it
     function(add_gtest test_name associated_target)
     endfunction()
 else()

@@ -42,64 +42,101 @@
 #include <iostream>
 #include <string>
 
-namespace {
-const json::Json& load_configuration(int argc, const char** argv) {
-    log_info("app", "Redfish server version " << psme::app::VERSION);
+#include <gcrypt.h>
+#include <gnutls/gnutls.h>
+#include <unistd.h>
 
-    /* Initialize configuration */
-    auto& config = configuration::Configuration::get_instance();
+using namespace psme::app;
+using namespace configuration;
+namespace fs = std::filesystem;
 
-    if (argc < 2) {
-        log_error("app", "No configuration file provided.");
+App::App(const char* config_path) { init(config_path); }
+
+App::~App() { cleanup(); }
+
+void App::run() {
+    try {
+        if (m_network_change_notifier) {
+            m_network_change_notifier->start();
+        }
+        m_rest_event_service->start();
+        m_rest_session_service->start();
+        m_rest_server->start();
+        m_ssdp_service->start();
+
+        wait_for_termination();
+        log_info(LOGUSR, "Stopping Redfish Server");
+    }
+    catch (std::exception& e) {
+        log_error("app", e.what());
+    }
+    catch (...) {
+        log_error("app", "Unknown exception.");
+    }
+}
+
+void App::init(const char* config_path) {
+    std::cout << "Redfish server version " << psme::app::VERSION << std::endl;
+    try {
+        check_permissions();
+        load_configuration(config_path);
+        init_logger();
+        init_database();
+        agent_framework::module::ServiceUuid::get_instance();
+        init_network_change_notifier();
+        init_ssdp_service();
+        Context::get_instance()->initialize();
+        init_rest_event_service();
+        init_rest_session_service();
+        psme::rest::eventing::manager::SubscriptionManager::get_instance();
+        init_registries();
+        init_rest_server();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Failed to initialize Application: " << e.what() << std::endl;
+        cleanup();
         exit(-1);
     }
-    config.add_file(argv[1]);
-    const json::Json& json_configuration = config.to_json();
+    catch (...) {
+        std::cerr << "Failed to initialize Application: Unknown exception." << std::endl;
+        cleanup();
+        exit(-1);
+    }
+}
+
+void App::load_configuration(const char* config_path) {
+    auto& config = Configuration::get_instance();
+
+    /* Initialize configuration */
+
+    config.add_file(config_path);
+
+    const auto& json_config = Configuration::get_instance().to_json();
 
     nlohmann::json_schema::json_validator validator;
     try {
         validator.set_root_schema(psme::app::DEFAULT_VALIDATOR_JSON);
     }
     catch (const std::exception& e) {
-        log_error("app", "JSON schema incorrect.");
-        log_error("app", e.what());
-        exit(-1);
+        throw std::runtime_error(std::string("JSON schema incorrect. ") + e.what());
     }
 
     try {
-        validator.validate(json_configuration);
+        validator.validate(json_config);
     }
     catch (const std::exception& e) {
-        log_error("app", "Incorrect configuration.");
-        log_error("app", e.what());
-        exit(-1);
+        throw std::runtime_error(std::string("Incorrect configuration. ") + e.what());
     }
-
-    return json_configuration;
 }
-
-} // namespace
-
-using namespace psme::app;
-
-App::App(int argc, const char* argv[]) try : m_configuration(load_configuration(argc, argv)) {
-    init();
-}
-catch (std::exception& e) {
-    std::cerr << "\nFailed to initialize Application: " << e.what() << "\n";
-    exit(-1);
-}
-
-App::~App() { cleanup(); }
 
 void App::init_database() {
-    if (m_configuration.value("database", json::Json::object()).value("location", json::Json()).is_string()) {
-        database::Database::set_default_location(m_configuration["database"]["location"].get<std::string>());
-    }
+    const auto& json_config = Configuration::get_instance().to_json();
+    database::Database::set_default_location(json_config["database"]["location"]);
 }
 
 void App::init_logger() {
-    logger_cpp::LoggerLoader loader(m_configuration);
+    const auto& json_config = Configuration::get_instance().to_json();
+    logger_cpp::LoggerLoader loader(json_config);
     loader.load(logger_cpp::LoggerFactory::instance());
 }
 
@@ -113,100 +150,29 @@ void App::init_network_change_notifier() {
 }
 
 void App::init_ssdp_service() {
+    const auto& json_config = Configuration::get_instance().to_json();
     const auto& service_uuid = agent_framework::module::ServiceUuid::get_instance()->get_service_uuid();
-    m_ssdp_service.reset(new ssdp::SsdpService{ssdp::load_ssdp_config(m_configuration, service_uuid)});
+    m_ssdp_service = std::make_shared<ssdp::SsdpService>(ssdp::load_ssdp_config(json_config, service_uuid));
     if (m_network_change_notifier) {
         m_network_change_notifier->add_listener(m_ssdp_service);
     }
 }
 
 void App::init_rest_server() {
-    using psme::rest::server::RestServer;
-    m_rest_server.reset(new RestServer);
+    m_rest_server = std::make_unique<psme::rest::server::RestServer>();
 }
 
 void App::init_rest_event_service() {
-    using psme::rest::eventing::EventService;
-    m_rest_event_service.reset(new EventService());
+    m_rest_event_service = std::make_unique<psme::rest::eventing::EventService>();
 }
 
 void App::init_rest_session_service() {
-    using psme::rest::security::session::SessionService;
-    m_rest_session_service.reset(new SessionService());
+    m_rest_session_service = std::make_unique<psme::rest::security::session::SessionService>();
 }
 
 void App::init_registries() {
-    using namespace rest::registries;
-    const std::string& base_configuration{make_base_configuration()};
-    RegistryConfigurator::get_instance()->load(base_configuration);
-}
-
-void App::init() {
-    try {
-        init_database();
-        init_logger();
-        agent_framework::module::ServiceUuid::get_instance();
-        init_network_change_notifier();
-        init_ssdp_service();
-        Context::get_instance()->initialize();
-        init_rest_event_service();
-        init_rest_session_service();
-        psme::rest::eventing::manager::SubscriptionManager::get_instance();
-        init_registries();
-        init_rest_server();
-    }
-    catch (const std::exception& e) {
-        log_error("app",
-                  "Failed to initialize Application: " << e.what());
-        cleanup();
-        exit(-1);
-    }
-    catch (...) {
-        log_error("app",
-                  "Failed to initialize Application: Unknown exception.");
-        cleanup();
-        exit(-1);
-    }
-}
-
-void App::run() {
-    try {
-        if (m_network_change_notifier) {
-            m_network_change_notifier->start();
-        }
-        m_rest_event_service->start();
-        m_rest_session_service->start();
-        m_rest_server->start();
-        m_ssdp_service->start();
-
-        wait_for_termination();
-        log_info(LOGUSR, "Stopping PSME Application...");
-    }
-    catch (std::exception& e) {
-        log_error("app", e.what());
-    }
-    catch (...) {
-        log_error("app", "Unknown exception.");
-    }
-}
-
-void App::wait_for_termination() {
-    log_debug(LOGUSR, "Waiting for termination signal...");
-
-    sigset_t sset;
-    sigemptyset(&sset);
-    sigaddset(&sset, SIGINT);
-    sigaddset(&sset, SIGQUIT);
-    sigaddset(&sset, SIGTERM);
-    sigprocmask(SIG_BLOCK, &sset, NULL);
-    int sig;
-    sigwait(&sset, &sig);
-}
-
-void App::statics_cleanup() {
-    psme::rest::eventing::manager::SubscriptionManager::get_instance()->clean_up();
-    configuration::Configuration::cleanup();
-    logger_cpp::LoggerFactory::cleanup();
+    const std::string& base_configuration = rest::registries::make_base_configuration();
+    rest::registries::RegistryConfigurator::get_instance()->load(base_configuration);
 }
 
 void App::cleanup() {
@@ -230,5 +196,50 @@ void App::cleanup() {
         m_network_change_notifier->stop();
         m_network_change_notifier.reset();
     }
-    statics_cleanup();
+    psme::rest::eventing::manager::SubscriptionManager::get_instance()->clean_up();
+    Configuration::cleanup();
+}
+
+void App::check_permissions() {
+#if defined __aarch64__
+    if (getuid() != 0) {
+        throw std::runtime_error("This application must be run as root");
+    }
+    check_folder_permissions("/work/redfish");
+    check_folder_permissions("/work/redfish/certs");
+    if (!gnutls_fips140_mode_enabled()) {
+        throw std::runtime_error("FIPS mode is not enabled. Make sure to run the IPU Redfish server as a service!");
+    }
+#endif
+    if (!gcry_check_version(nullptr)) {
+        throw std::runtime_error("libgcrypt initialization failed");
+    }
+    gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0);
+}
+
+void App::check_folder_permissions(const std::string& dir_path) {
+    if (!fs::exists(dir_path)) {
+        throw std::runtime_error("The directory " + dir_path + " does not exist");
+    }
+
+    fs::perms perm = fs::status(dir_path).permissions();
+    if ((perm & fs::perms::owner_all) != fs::perms::owner_all) {
+        throw std::runtime_error("The required owner permissions are not set for " + dir_path);
+    }
+    if ((perm & (fs::perms::group_all | fs::perms::others_all)) != fs::perms::none) {
+        throw std::runtime_error("The permissions for " + dir_path + " are too open!");
+    }
+}
+
+void App::wait_for_termination() {
+    log_debug(LOGUSR, "Waiting for termination signal...");
+
+    sigset_t sset;
+    sigemptyset(&sset);
+    sigaddset(&sset, SIGINT);
+    sigaddset(&sset, SIGQUIT);
+    sigaddset(&sset, SIGTERM);
+    sigprocmask(SIG_BLOCK, &sset, NULL);
+    int sig;
+    sigwait(&sset, &sig);
 }

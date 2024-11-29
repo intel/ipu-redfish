@@ -77,7 +77,7 @@ for SUBDIRECTORY in ${TARGET_SUBDIRECTORIES[*]} ; do
 done
 
 # Additional hard-coded targets
-ADDITIONAL_TARGETS="doc-generate doc-dev-generate"
+ADDITIONAL_TARGETS="doc-generate"
 
 # We can build executables, libraries or simply all
 TARGETS="$(echo "$BUILD_ALL ${POSSIBLE_EXECUTABLES[*]}" "${POSSIBLE_LIBRARIES[*]}" "$ADDITIONAL_TARGETS" | sort -u)"

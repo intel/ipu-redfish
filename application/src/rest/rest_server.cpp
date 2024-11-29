@@ -35,25 +35,23 @@ using namespace psme::rest::security::authentication;
 
 RestServer::RestServer() {
     const json::Json& config = configuration::Configuration::get_instance().to_json();
-    auto connectors_options = load_connectors_options(config);
+    auto connector_options = load_server_options(config);
 
     endpoint::EndpointBuilder endpoint_builder;
     endpoint_builder.build_endpoints();
 
-    for (const auto& connector_options : connectors_options) {
-        m_connector.reset(new MHDConnector(connector_options));
-        m_connector->set_callback([](const Request& req, Response& res) {
-            Multiplexer::get_instance()->forward_to_handler(res,
-                                                            const_cast<Request&>(req));
-        });
-        security::authentication::AuthenticationFactory authenticationFactory{};
-        m_connector->set_authentication(authenticationFactory.create_authentication(connector_options));
+    m_connector.reset(new MHDConnector(connector_options));
+    m_connector->set_callback([](const Request& req, Response& res) {
+        Multiplexer::get_instance()->forward_to_handler(res,
+                                                        const_cast<Request&>(req));
+    });
+    security::authentication::AuthenticationFactory authenticationFactory{};
+    m_connector->set_authentication(authenticationFactory.create_authentication(connector_options));
 
-        m_connector->set_unauthenticated_access_callback([](const std::string& http_method,
-                                                            const std::string& url) {
-            return Multiplexer::get_instance()->check_public_access(http_method, url);
-        });
-    }
+    m_connector->set_unauthenticated_access_callback([](const std::string& http_method,
+                                                        const std::string& url) {
+        return Multiplexer::get_instance()->check_public_access(http_method, url);
+    });
 }
 
 RestServer::~RestServer() {}

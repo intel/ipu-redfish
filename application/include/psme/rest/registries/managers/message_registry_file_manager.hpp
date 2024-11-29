@@ -106,7 +106,7 @@ protected:
      * */
     void increment_max_id();
 private:
-    std::recursive_mutex m_mutex{};
+    mutable std::recursive_mutex m_mutex{};
     UuidToRegistryFileMap m_uuid_to_registry_file_map{};
     IdToUuidMap m_id_to_uuid_map{};
     std::uint64_t m_max_id{0u};

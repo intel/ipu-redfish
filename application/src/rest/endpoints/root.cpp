@@ -39,7 +39,6 @@ json::Json make_prototype() {
     r[Common::ODATA_ID] = "/redfish/v1";
     r[Common::ODATA_TYPE] = "#ServiceRoot.v1_17_0.ServiceRoot";
     r[Common::ID] = "RootService";
-    r[Common::NAME] = "Intel IPU Redfish Server";
     r[Common::DESCRIPTION] = "Service Root";
     r[Root::REDFISH_VERSION] = "1.20.1";
     r[Common::UUID] = "00000000000-000000-0000000-00000000000000000";
@@ -60,7 +59,7 @@ json::Json make_prototype() {
 
 endpoint::Root::Root(const std::string& path) : EndpointBase(path) {
     const auto& config = configuration::Configuration::get_instance().to_json();
-    m_service_root_name = config.value("rest", json::Json())["service-root-name"].get<std::string>();
+    m_service_root_name = config.value("service", json::Json()).get<std::string>();
 }
 
 endpoint::Root::~Root() {}

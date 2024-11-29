@@ -107,11 +107,6 @@ public:
     static StreamSPtr global_stream();
 
     /*!
-     * @brief cleanup Clean LoggerFactory objects
-     */
-    static void cleanup() __attribute__((deprecated)) {}
-
-    /*!
      * @brief Sets main logger name
      *
      * @param name logger name

@@ -30,9 +30,6 @@ namespace psme {
 namespace rest {
 namespace endpoint {
 
-static constexpr const char TASK_SERVICE_CONFIG_KEY[] = "task-service";
-static constexpr const char TASK_SERVICE_ENABLED_KEY[] = "enabled";
-
 /*!
  * A class representing the rest api enpoint for TaskService
  */

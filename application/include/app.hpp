@@ -50,10 +50,9 @@ class App final {
 public:
     /*!
      * @brief Constructor
-     * @param argc number of arguments passed to program
-     * @param argv array with program arguments
+     * @param config_path: path to the json config file
      */
-    App(int argc, const char** argv);
+    App(const char* config_path);
 
     /*!
      * @brief Destructor
@@ -74,21 +73,21 @@ private:
      * Responsible for initialization of loggers, registration server,
      * eventing server and rest server. Does not start the mentioned servers.
      */
-    void init();
+    void init(const char* config_path);
+    void load_configuration(const char* config_path);
     void init_database();
     void init_logger();
     void init_network_change_notifier();
     void init_ssdp_service();
+    void init_rest_server();
     void init_rest_event_service();
     void init_rest_session_service();
-    void init_rest_server();
     void init_registries();
-    void init_ipu_service();
     void cleanup();
-    void statics_cleanup();
+    void check_permissions();
+    void check_folder_permissions(const std::string& dir_path);
     void wait_for_termination();
 
-    const json::Json& m_configuration;
     std::unique_ptr<psme::rest::server::RestServer> m_rest_server{};
     std::unique_ptr<psme::rest::eventing::EventService> m_rest_event_service{};
     std::unique_ptr<psme::rest::security::session::SessionService> m_rest_session_service{};

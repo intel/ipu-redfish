@@ -24,11 +24,11 @@ if(CMAKE_CROSSCOMPILING)
 endif()
 
 FetchContent_Declare(gpg-error
-    URL "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.47.tar.bz2"
-    URL_HASH MD5=58e054ca192a77226c4822bbee1b7fdb
+    URL "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.42.tar.bz2"
+    URL_HASH MD5=133fed221ba8f63f5842858a1ff67cb3
 )
 
-pkg_check_modules(gpg-error IMPORTED_TARGET gpg-error=1.47)
+pkg_check_modules(gpg-error IMPORTED_TARGET gpg-error=1.42)
 if(gpg-error_FOUND)
     message("gpg-error library ver: ${gpg-error_VERSION}")
     message("gpg-error include dir: ${gpg-error_INCLUDE_DIRS}")
@@ -46,29 +46,21 @@ if(NOT gpg-error_POPULATED AND NOT gpg-error_FOUND)
 
     # Configure
     execute_process(
-        COMMAND ${gpg-error_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
+        COMMAND ${gpg-error_SOURCE_DIR}/configure ${CONFIGURE_FLAGS} --cache-file=../configure.cache
         WORKING_DIRECTORY ${gpg-error_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    # Build
+    # Build & install
     execute_process(
-        COMMAND make ${BUILD_EXTRA_ARGS}
+        COMMAND make install ${BUILD_EXTRA_ARGS}
         WORKING_DIRECTORY ${gpg-error_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    # Install
-    execute_process(
-        COMMAND make install
-        WORKING_DIRECTORY ${gpg-error_BINARY_DIR}
-        OUTPUT_QUIET
-        ERROR_QUIET
-    )
-
-    pkg_check_modules(gpg-error REQUIRED IMPORTED_TARGET gpg-error=1.47)
+    pkg_check_modules(gpg-error REQUIRED IMPORTED_TARGET gpg-error=1.42)
     message("gpg-error library ver: ${gpg-error_VERSION}")
     message("gpg-error include dir: ${gpg-error_INCLUDE_DIRS}")
     message("gpg-error library dir: ${gpg-error_LIBRARY_DIRS}")

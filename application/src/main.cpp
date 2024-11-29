@@ -23,66 +23,19 @@
  * */
 
 #include "app.hpp"
-#include <filesystem>
-#include <gcrypt.h>
-#include <gnutls/gnutls.h>
+#include <iostream>
 #include <sys/stat.h>
-#include <unistd.h>
-
-#if defined __aarch64__
-namespace {
-namespace fs = std::filesystem;
-
-/*!
- * @brief Checks whether the specified folder has the required permissions
- * @return true in case of success, false in case of failure
- */
-bool check_folder_permissions(const std::string& dir_path) {
-    if (!fs::exists(dir_path)) {
-        log_error("app", "The directory " + dir_path + " does not exist");
-        return false;
-    }
-
-    fs::perms perm = fs::status(dir_path).permissions();
-    if ((perm & fs::perms::owner_all) != fs::perms::owner_all) {
-        log_error("app", "The required owner permissions are not set for " + dir_path);
-        return false;
-    }
-    if ((perm & (fs::perms::group_all | fs::perms::others_all)) != fs::perms::none) {
-        log_error("app", "The permissions for " + dir_path + " are too open!");
-        return false;
-    }
-    return true;
-}
-} // namespace
-#endif
 
 /*!
  * @brief PSME REST application main method
  * */
 int main(int argc, const char* argv[]) {
+    if (argc < 2) {
+        std::cerr << "Failed to start server: no configuration file provided." << std::endl;
+        return -1;
+    }
     umask(0077);
-#if defined __aarch64__
-    if (getuid() != 0) {
-        log_error("app", "This application must be run as root");
-        return 1;
-    }
-    if (!check_folder_permissions("/work/redfish") ||
-        !check_folder_permissions("/work/redfish/certs")) {
-        return 1;
-    }
-    if (!gnutls_fips140_mode_enabled()) {
-        log_error("app", "FIPS mode is not enabled. Make sure to run the IPU Redfish server as a service!");
-        return 1;
-    }
-#endif
-    if (!gcry_check_version(nullptr)) {
-        log_error("app", "libgcrypt initialization failed");
-        return 1;
-    }
-    gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0);
-
-    psme::app::App app(argc, argv);
+    psme::app::App app(argv[1]);
     app.run();
     return 0;
 }

@@ -1,16 +1,12 @@
 {
     "service" : "Intel IPU Redfish Service",
     "server": {
-        "network-interface-name" : ["eth0"],
-        "connectors" : [
-            {
-                "certs-directory" : "/work/redfish/certs",
-                "port": 8443,
-                "thread-mode" : "select",
-                "client-cert-required" : false,
-                "authentication-type" : "basic-or-session"
-            }
-        ]
+        "network-interface-name" : "eth0",
+        "certs-directory" : "/work/redfish/certs",
+        "port": 8443,
+        "thread-mode" : "select",
+        "client-cert-required" : false,
+        "authentication-type" : "basic-or-session"
     },
     "event-service" : {
         "delivery-retry-attempts" : 3,
@@ -29,19 +25,14 @@
         "announce-interval-seconds" : 0,
         "ttl" : 2
     },
-    "rest" : {
-        "service-root-name" : "Intel IPU Redfish Service"
-    },
     "database": {
-        "location": "/work/redfish/db",
-        "retention-interval-sec": 600,
-        "retention-outdated-sec": 2419200
+        "location": "/work/redfish/db"
     },
     "loggers" : [
         {
             "name" : "app",
-            "level" : "DEBUG",
-            "timeformat" : "DATE_NS",
+            "level" : "INFO",
+            "timeformat" : "NONE",
             "color" : true,
             "output" : true,
             "tagging" : true,

@@ -23,23 +23,9 @@ namespace psme {
 namespace rest {
 namespace server {
 
-ConnectorOptionsVec load_connectors_options(const json::Json& config) {
-    ConnectorOptionsVec connector_options{};
-    if (config.count("server") &&
-        config["server"].count("connectors") &&
-        config["server"].count("network-interface-name")) {
-        const auto& connectors_config = config["server"]["connectors"];
-        const auto& network_interface_names = config["server"]["network-interface-name"];
-        for (const auto& iface_name : network_interface_names) {
-            for (const auto& connector_config : connectors_config) {
-                connector_options.emplace_back(connector_config, iface_name.get<std::string>());
-            }
-        }
-    }
-    if (connector_options.empty()) {
-        throw std::runtime_error("No valid connector configuration found.");
-    }
-    return connector_options;
+ConnectorOptions load_server_options(const json::Json& config) {
+    ConnectorOptions server_options(config["server"]);
+    return server_options;
 }
 
 } // namespace server

@@ -24,11 +24,11 @@ if(CMAKE_CROSSCOMPILING)
 endif()
 
 FetchContent_Declare(gnutls
-    URL "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.7/gnutls-3.7.6.tar.xz"
-    URL_HASH MD5=5b07c89e53a351209dc23b714da3ef98
+    URL "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.3.tar.xz"
+    URL_HASH MD5=269966167fa5bf8bae5f7534bcc3c454
 )
 
-pkg_check_modules(gnutls IMPORTED_TARGET gnutls=3.7.6)
+pkg_check_modules(gnutls IMPORTED_TARGET gnutls=3.8.3)
 if(gnutls_FOUND)
     message("gnutls library ver: ${gnutls_VERSION}")
     message("gnutls include dir: ${gnutls_INCLUDE_DIRS}")
@@ -59,23 +59,15 @@ if(NOT gnutls_POPULATED AND NOT gnutls_FOUND)
 
     # Configure
     execute_process(
-        COMMAND ${gnutls_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
+        COMMAND ${gnutls_SOURCE_DIR}/configure ${CONFIGURE_FLAGS} --cache-file=../configure.cache
         WORKING_DIRECTORY ${gnutls_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    # Build
+    # Build & install
     execute_process(
-        COMMAND make ${BUILD_EXTRA_ARGS}
-        WORKING_DIRECTORY ${gnutls_BINARY_DIR}
-        OUTPUT_QUIET
-        ERROR_QUIET
-    )
-
-    # Install
-    execute_process(
-        COMMAND make install
+        COMMAND make install ${BUILD_EXTRA_ARGS}
         WORKING_DIRECTORY ${gnutls_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
@@ -91,7 +83,7 @@ if(NOT gnutls_POPULATED AND NOT gnutls_FOUND)
         ERROR_QUIET
     )
 
-    pkg_check_modules(gnutls REQUIRED IMPORTED_TARGET gnutls=3.7.6)
+    pkg_check_modules(gnutls REQUIRED IMPORTED_TARGET gnutls=3.8.3)
     message("gnutls library ver: ${gnutls_VERSION}")
     message("gnutls include dir: ${gnutls_INCLUDE_DIRS}")
     message("gnutls library dir: ${gnutls_LIBRARY_DIRS}")

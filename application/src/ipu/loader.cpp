@@ -76,6 +76,11 @@ void Loader::load() {
     media.set_id(media_id_policy.get_id(media.get_uuid(), acc.get_uuid()));
     get_manager<agent_framework::model::VirtualMedia>().add_entry(media);
 
-    AccBootOptionHandler handler;
-    handler.init();
+    try {
+        AccBootOptionHandler handler;
+        handler.init();
+    }
+    catch (...) {
+        log_error("ipu", "Failed to load the boot override configuration");
+    }
 }

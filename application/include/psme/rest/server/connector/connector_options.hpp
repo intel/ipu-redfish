@@ -46,6 +46,8 @@ namespace server {
  **/
 class ConnectorOptions {
 public:
+    /*! @brief Property name of network interface to listen on */
+    static constexpr const char NETWORK_INTERFACE_NAME[] = "network-interface-name";
     /*! @brief Property name of port Connector should listen on */
     static constexpr const char PORT[] = "port";
     /*! @brief Property name of Path to directory containing files for ssl Connector */
@@ -94,12 +96,17 @@ public:
      * @param network_interface_name Network interface name on which connector is listening
      *                               for incoming requests
      * */
-    explicit ConnectorOptions(const json::Json& connector_config, const std::string& network_interface_name);
+    explicit ConnectorOptions(const json::Json& connector_config);
+
+    /*!
+     * @brief Constructor.
+     * */
+    ConnectorOptions() = delete;
 
     /*!
      * @brief Destructor.
      */
-    ~ConnectorOptions();
+    ~ConnectorOptions() = default;
 
     /*!
      * @brief Default copy Constructor.
@@ -181,9 +188,6 @@ private:
     bool m_use_debug{false};
     std::string m_network_interface_name{};
 };
-
-/*! Declaration of Vector with ConnectorOptions elements */
-using ConnectorOptionsVec = std::vector<ConnectorOptions>;
 
 } // namespace server
 } // namespace rest
