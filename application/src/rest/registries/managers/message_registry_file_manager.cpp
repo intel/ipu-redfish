@@ -53,7 +53,7 @@ const MessageRegistryFile& MessageRegistryFileManager::get_file_by_uuid(const st
 const MessageRegistryFile& MessageRegistryFileManager::get_file_by_id(uint64_t file_id) {
     std::lock_guard<std::recursive_mutex> lock{m_mutex};
 
-    auto uuid = m_id_to_uuid_map.at(file_id);
+    const auto& uuid = m_id_to_uuid_map.at(file_id);
     return m_uuid_to_registry_file_map.at(uuid);
 }
 

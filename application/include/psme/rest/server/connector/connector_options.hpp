@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "agent-framework/module/utils/optional_field.hpp"
 #include "json-wrapper/json-wrapper.hpp"
 #include <string>
 
@@ -46,8 +47,8 @@ namespace server {
  **/
 class ConnectorOptions {
 public:
-    /*! @brief Property name of network interface to listen on */
-    static constexpr const char NETWORK_INTERFACE_NAME[] = "network-interface-name";
+    /*! @brief Property name of restricted to interface to listen on */
+    static constexpr const char RESTRICTED_TO_INTERFACE[] = "restricted-to-interface";
     /*! @brief Property name of port Connector should listen on */
     static constexpr const char PORT[] = "port";
     /*! @brief Property name of Path to directory containing files for ssl Connector */
@@ -93,8 +94,6 @@ public:
     /*!
      * @brief Constructor.
      * @param connector_config JSON Object with connector options.
-     * @param network_interface_name Network interface name on which connector is listening
-     *                               for incoming requests
      * */
     explicit ConnectorOptions(const json::Json& connector_config);
 
@@ -174,9 +173,9 @@ public:
 
     /*!
      * Getter for network interface name on which connector listens incoming requests
-     * @return Network interface name
+     * @return Optional network interface name
      */
-    const std::string& get_network_interface_name() const;
+    const OptionalField<std::string>& get_network_interface_name() const;
 private:
     uint16_t m_port{443};
     std::string m_certs_dir{};
@@ -186,7 +185,7 @@ private:
     ThreadMode m_thread_mode{ThreadMode::SELECT};
     AuthenticationType m_authentication_type{AuthenticationType::BASIC_AUTH};
     bool m_use_debug{false};
-    std::string m_network_interface_name{};
+    OptionalField<std::string> m_network_interface_name{};
 };
 
 } // namespace server

@@ -12,7 +12,7 @@ namespace psme {
 namespace ipu {
 
 FirmwareBuildGetter::FirmwareBuildGetter() {
-#if defined __aarch64__
+#ifdef INTEL_IPU
     std::string file_content;
     try {
         std::getline(std::ifstream(FIRMWARE_VERSION_FILEPATH), file_content, '\n');

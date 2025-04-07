@@ -28,9 +28,11 @@ if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
     cmake_policy(SET CMP0135 NEW)
 endif()
 
-if("$ENV{MACHINE}" STREQUAL "aarch64" OR "$ENV{ARCH}" STREQUAL "arm64" )
-    message("Setting CMAKE_CROSSCOMPILING")
-    set(CMAKE_CROSSCOMPILING 1)
+option(IPU "Compilation of code for IPU MEV-TS platform" FALSE)
+
+# Keep the compatibility with IPU-SDK
+if(CMAKE_CROSSCOMPILING)
+    set(IPU TRUE)
 endif()
 
 option(RUN_CLANG_FORMAT "Run clang-format" ON)
@@ -40,22 +42,25 @@ include(FetchContent)
 
 option(FETCHCONTENT_NETWORK_ACCESS "Enable FetchContent to pull dependencies using Git" ON)
 
-if(FETCHCONTENT_NETWORK_ACCESS)
-  FetchContent_Declare(
-    cmake_utilities
-    GIT_REPOSITORY https://github.com/intel-innersource/libraries.devops.cmake-utilities
-    GIT_TAG main
-  )
-else()
-  FetchContent_Declare(
-    cmake_utilities
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utilities
-  )
+if(IPU)
+    if(FETCHCONTENT_NETWORK_ACCESS)
+      FetchContent_Declare(
+        cmake_utilities
+        GIT_REPOSITORY https://github.com/intel-innersource/libraries.devops.cmake-utilities
+        GIT_TAG main
+      )
+    else()
+      FetchContent_Declare(
+        cmake_utilities
+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utilities
+      )
+    endif()
+
+    FetchContent_MakeAvailable(cmake_utilities)
+    list(APPEND CMAKE_MODULE_PATH ${cmake_utilities_SOURCE_DIR})
+    include(CommonComponents)
 endif()
 
-FetchContent_MakeAvailable(cmake_utilities)
-list(APPEND CMAKE_MODULE_PATH ${cmake_utilities_SOURCE_DIR})
-include(CommonComponents)
 ###############################################################################
 string(TIMESTAMP BUILD_TIME "%H:%M:%S, %d-%m-%Y")
 
@@ -70,7 +75,7 @@ set(CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/3rdparty")
 message("CMAKE_C_COMPILER: ${CMAKE_C_COMPILER}")
 message("CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
 
-if(CMAKE_CROSSCOMPILING)
+if(IPU)
     set(CMAKE_C_COMPILER_WORKS 1)
     set(CMAKE_CXX_COMPILER_WORKS 1)
     find_program(CCACHE_FOUND ccache)
@@ -131,55 +136,52 @@ list(APPEND CMAKE_PREFIX_PATH ${INSTALL})
 set(ENV{PKG_CONFIG_PATH} "${INSTALL}/lib/pkgconfig:${INSTALL}/lib64/pkgconfig:$ENV{PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig")
 unset(ENV{PKG_CONFIG_SYSROOT_DIR})
 
-# Find packages built by us or provided by the system
-include(InstallGmp)
-include(InstallNettle)
-include(InstallGnuTLS)
-include(InstallGPG-error)
-include(InstallGCrypt)
+if(IPU)
+    FetchMevCpchnl()
+    FetchResult()
+    FetchDcql()
+    FetchNlohmannJson()
+    FetchNlohmannJsonSchema()
+    FetchIPUUpdate()
+    FetchSafestringlib()
+    FetchCurl()
 
-FetchMevCpchnl()
-FetchResult()
-FetchDcql()
-FetchNlohmannJson()
-FetchNlohmannJsonSchema()
-FetchIPUUpdate()
-FetchSafestringlib()
-
-# IPU SDK already has libmicrohttpd
-if(NOT CMAKE_CROSSCOMPILING)
-    FetchMicrohttpd()
-endif()
-FetchCurl()
-
-target_compile_options(nlohmann_json_schema_validator PRIVATE -w)
-# Disable warnings in Intel components
-# TODO: attempt to fix them
-target_compile_options(safestring_objlib PRIVATE -w)
-target_compile_options(safestring_static PRIVATE -w)
-target_compile_options(safestring_shared PRIVATE -w)
-target_compile_options(result PRIVATE -w)
-target_compile_options(dcql PRIVATE -w)
-target_compile_options(dcqlxx PRIVATE -w)
-target_compile_options(sec_c PRIVATE -w)
-target_compile_options(linkedlist PRIVATE -w)
-target_compile_options(pldm_shared_code PRIVATE -w)
-target_compile_options(ipuupdate_library PRIVATE -w)
-target_compile_options(ipu-update-file PRIVATE -w)
-target_compile_options(ifut_pldm PRIVATE -w)
-target_compile_options(ifut_resources PRIVATE -w)
-target_compile_options(ifut_version_device PRIVATE -w)
-if(NOT CMAKE_CROSSCOMPILING)
-target_compile_options(fake_dcql PRIVATE -w)
+    target_compile_options(nlohmann_json_schema_validator PRIVATE -w)
+    # Disable warnings in Intel components
+    # TODO: attempt to fix them
+    target_compile_options(safestring_objlib PRIVATE -w)
+    target_compile_options(safestring_static PRIVATE -w)
+    target_compile_options(safestring_shared PRIVATE -w)
+    target_compile_options(result PRIVATE -w)
+    target_compile_options(dcql PRIVATE -w)
+    target_compile_options(dcqlxx PRIVATE -w)
+    target_compile_options(sec_c PRIVATE -w)
+    target_compile_options(linkedlist PRIVATE -w)
+    target_compile_options(pldm_shared_code PRIVATE -w)
+    target_compile_options(ipuupdate_library PRIVATE -w)
+    target_compile_options(ipu-update-file PRIVATE -w)
+    target_compile_options(ifut_pldm PRIVATE -w)
+    target_compile_options(ifut_resources PRIVATE -w)
+    target_compile_options(ifut_version_device PRIVATE -w)
+else()
+    include(InstallGmp)
+    include(InstallNettle)
+    include(InstallGnuTLS)
+    include(InstallGPG-error)
+    include(InstallGCrypt)
+    include(InstallCurl)
+    include(InstallMicrohttpd)
+    include(InstallNlohmannJson)
+    include(InstallSafeString)
+    include(InstallGoogleTest)
 endif()
 
 # Enable unit testing
-if(CMAKE_CROSSCOMPILING)
+if(IPU)
     # empty stub to avoid changing every cmakelists.txt that uses it
     function(add_gtest test_name associated_target)
     endfunction()
 else()
-    include(InstallGoogleTest)
     include(GoogleTest)
     enable_testing()
     set(ENABLE_TESTS TRUE)
@@ -188,7 +190,7 @@ endif()
 
 find_package(ZLIB)
 
-if(NOT CMAKE_CROSSCOMPILING)
+if(NOT IPU)
     # These libraries don't provide find_package config - but have .pc files
     pkg_check_modules(libzstd IMPORTED_TARGET libzstd)
     pkg_check_modules(libbrotlidec IMPORTED_TARGET libbrotlidec)

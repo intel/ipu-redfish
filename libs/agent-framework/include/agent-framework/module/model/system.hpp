@@ -37,10 +37,9 @@ namespace model {
 /*! System */
 class System : public Resource {
 public:
-    using BootOverrideSupported = attribute::Array<enums::BootOverrideTarget>;
-    using BootModeSupported = attribute::Array<enums::BootOverrideMode>;
+    using BootOverrideSupported = attribute::Array<enums::BootOverride>;
+    using BootOverrideTargetSupported = attribute::Array<enums::BootOverrideTarget>;
     using PciDevices = attribute::Array<attribute::PciDevice>;
-    using UsbDevices = attribute::Array<attribute::UsbDevice>;
 
     explicit System(const std::string& parent_uuid = {}, enums::Component parent_type = enums::Component::None);
 
@@ -129,14 +128,6 @@ public:
     }
 
     /*!
-     * @brief Set boot override supported
-     * @param[in] boot_override_supported blade boot override supported
-     * */
-    void set_boot_override_supported(const BootOverrideSupported& boot_override_supported) {
-        m_boot_override_supported = boot_override_supported;
-    }
-
-    /*!
      * @brief Get boot override supported
      * @return Boot override supported
      * */
@@ -145,37 +136,12 @@ public:
     }
 
     /*!
-     * @brief Set boot mode supported
-     * @param[in] boot_mode_supported blade boot mode supported
+     * @brief Get supported boot override targets
+     * @return Supported boot override targets
      * */
-    void set_boot_mode_supported(const BootModeSupported& boot_mode_supported) {
-        m_boot_mode_supported = boot_mode_supported;
+    const BootOverrideTargetSupported& get_boot_override_target_supported() const {
+        return m_boot_override_target_supported;
     }
-
-    /*!
-     * @brief Get boot mode supported
-     * @return Boot mode supported
-     * */
-    const BootModeSupported& get_boot_mode_supported() const {
-        return m_boot_mode_supported;
-    }
-
-    /*!
-     * @brief Get uefi target
-     * @return Uefi target
-     * */
-    const OptionalField<std::string>& get_uefi_target() const {
-        return m_uefi_target;
-    }
-
-    /*!
-     * @brief Set uefi target
-     * @param[in] uefi_target blade uefi target
-     * */
-    void set_uefi_target(const OptionalField<std::string>& uefi_target) {
-        m_uefi_target = uefi_target;
-    }
-
     /*!
      * @brief Set power state from request
      * @param power_state blade power state
@@ -340,60 +306,17 @@ public:
      *
      * @param boot_override_supported of type BootOverrideSupported
      */
-    void add_boot_override_supported(const enums::BootOverrideTarget& boot_override_supported) {
+    void add_boot_override_supported(const enums::BootOverride& boot_override_supported) {
         m_boot_override_supported.add_entry(boot_override_supported);
     }
 
     /*!
-     * @brief adds boot_mode_supported
+     * @brief adds boot_override_target_supported
      *
-     * @param boot_mode_supported of type BootOverrideMode
+     * @param boot_override_target_supported of type BootOverrideTargetSupported
      */
-    void add_boot_mode_supported(const enums::BootOverrideMode& boot_mode_supported) {
-        m_boot_mode_supported.add_entry(boot_mode_supported);
-    }
-
-    /*!
-     * @brief return an object usb_devices of class UsbDevices
-     *
-     * @return the usb_devices value
-     */
-    const UsbDevices& get_usb_devices() const {
-        return m_usb_devices;
-    }
-
-    /*!
-     * @brief setter for usb_devices attribute
-     *
-     * @param usb_devices of type UsbDevices
-     */
-    void set_usb_devices(const UsbDevices& usb_devices) {
-        m_usb_devices = usb_devices;
-    }
-
-    /*!
-     * @brief adds usb_device
-     *
-     * @param usb_device of type UsbDevice
-     */
-    void add_usb_device(const attribute::UsbDevice& usb_device) {
-        m_usb_devices.add_entry(usb_device);
-    }
-
-    /*!
-     * @brief returns connection data
-     * @return connection data
-     */
-    const attribute::ConnectionData& get_connection_data() const {
-        return m_connection_data;
-    }
-
-    /*!
-     * @brief sets connection data
-     * @param connection_data connection data
-     */
-    void set_connection_data(const attribute::ConnectionData& connection_data) {
-        m_connection_data = connection_data;
+    void add_boot_override_target_supported(const enums::BootOverrideTarget& boot_override_target_supported) {
+        m_boot_override_target_supported.add_entry(boot_override_target_supported);
     }
 
     /*!
@@ -411,22 +334,6 @@ public:
     const OptionalField<std::string>& get_guid() const {
         return m_guid;
     }
-
-    /*!
-     * @brief Informs whether Trusted Execution Technology is Enabled or not
-     * @return true if Trusted Execution Technology is enabled, false otherwise
-     * */
-    const OptionalField<bool>& is_txt_enabled() const {
-        return m_txt_enabled;
-    }
-
-    /*!
-     * @brief Set Trusted Execution Technology enabled
-     * @param[in] value value that informs whether Trusted Execution Technology is enabled ot not
-     * */
-    void set_txt_enabled(const OptionalField<bool>& value) {
-        m_txt_enabled = value;
-    }
 private:
     OptionalField<enums::SystemType> m_system_type{enums::SystemType::Physical};
     OptionalField<std::string> m_bios_version{};
@@ -434,11 +341,9 @@ private:
     OptionalField<enums::BootOverrideMode> m_boot_override_mode{};
     OptionalField<enums::BootOverrideTarget> m_boot_override_target{};
     BootOverrideSupported m_boot_override_supported{};
-    BootModeSupported m_boot_mode_supported{};
-    OptionalField<std::string> m_uefi_target{};
+    BootOverrideTargetSupported m_boot_override_target_supported{};
     OptionalField<enums::PowerState> m_power_state{};
     PciDevices m_pci_devices{};
-    UsbDevices m_usb_devices{};
     attribute::FruInfo m_fru_info{};
     OptionalField<std::string> m_sku{};
     OptionalField<std::string> m_name{};
@@ -446,9 +351,7 @@ private:
     OptionalField<enums::IndicatorLed> m_indicator_led{};
     OptionalField<std::string> m_chassis{};
     OptionalField<Uuid> m_manager{};
-    attribute::ConnectionData m_connection_data{};
     OptionalField<std::string> m_guid{};
-    OptionalField<bool> m_txt_enabled{};
 
     static const enums::Component component;
 };

@@ -63,7 +63,7 @@ public:
      */
     agent_framework::generic::ObjReference<M, std::recursive_mutex> get_one() const {
         auto& manager = agent_framework::module::get_manager<M>();
-        auto uuid = manager.rest_id_to_uuid(m_id, m_parent_uuid);
+        const auto& uuid = manager.rest_id_to_uuid(m_id, m_parent_uuid);
 
         return manager.get_entry_reference(uuid);
     }
@@ -75,7 +75,7 @@ public:
      * */
     M get() const {
         const auto& manager = agent_framework::module::get_manager<M>();
-        auto uuid = manager.rest_id_to_uuid(m_id, m_parent_uuid);
+        const auto& uuid = manager.rest_id_to_uuid(m_id, m_parent_uuid);
 
         return manager.get_entry(uuid);
     }

@@ -19,7 +19,12 @@
 #
 # </license_header>
 
-FetchGoogleTest()
+FetchContent_Declare(gtest
+    URL "https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz"
+    URL_HASH MD5=7e11f6cfcf6498324ac82d567dcb891e
+)
+
+FetchContent_MakeAvailable(gtest)
 
 target_compile_options(gtest PRIVATE -w)
 target_compile_options(gtest_main PRIVATE -w)

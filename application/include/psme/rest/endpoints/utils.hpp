@@ -55,15 +55,6 @@ namespace utils {
 std::uint64_t id_to_uint64(const std::string& id_as_string);
 
 /*!
- * @brief does the manager with this uuid have a chassis which is of Drawer or Enclosure type?
- *
- * @param manager_uuid the manager uuid
- *
- * @return is the manager a drawer or enclosure manager
- */
-bool is_manager_for_drawer_or_enclosure(const std::string& manager_uuid);
-
-/*!
  * @brief finds the part of the URL after "/redfish/v1" using
  * recursion
  *
@@ -109,129 +100,6 @@ std::string get_task_monitor_url(const std::string& uuid);
 void set_location_header(const server::Request& req, server::Response& res, const std::string& path);
 
 /*!
- * @brief query all resources of type Resource, with a given parent,
- * return vector of results
- *
- * @tparam Resource type of queried model resources
- * @tparam QueryResult return type of query function
- * @param parent_uuid parent of queried objects
- * @param query a function operating on model resources
- *
- * @return vector of query results
- */
-template <typename Resource, typename QueryResult>
-std::vector<QueryResult> query_entries(const std::string& parent_uuid,
-                                       std::function<QueryResult(const Resource&)> query) {
-    std::vector<QueryResult> results{};
-    for (const auto& resource : agent_framework::module::get_manager<Resource>().get_entries(parent_uuid)) {
-        results.emplace_back(query(resource));
-    }
-    return results;
-}
-
-/*!
- * @brief Round double-precision number to 2-digits precision
- * @param number Value to round precision
- * @param digits Number of digits
- * @return Rounded value
- */
-double round(double number, int digits);
-
-/*!
- * @brief convert value in GB to value in GiB
- * Used for Drives (Logical, Physical)
- *
- * @param quantity_in_gb the quantity to convert
- *
- * @return the quantity in GiB
- */
-double gb_to_gib(double quantity_in_gb);
-
-/*!
- * @brief convert value in GiB to value in GB
- * Used for POST on Logical Drives
- *
- * @param quantity_in_gib the quantity to convert
- *
- * @return the quantity in GB
- */
-double gib_to_gb(double quantity_in_gib);
-
-/*!
- * @brief convert value in MB to value in MiB
- * Used for Dimms
- *
- * @param quantity_in_mb the quantity to convert
- *
- * @return the quantity in MiB
- */
-double mb_to_mib(double quantity_in_mb);
-
-/*!
- * @brief convert value in MB to value in GiB
- * Used for Dimms
- *
- * @param quantity_in_mb the quantity to convert
- *
- * @return the quantity in GiB
- */
-double mb_to_gib(double quantity_in_mb);
-
-/*!
- * @brief convert value in MB to value in MiB
- * Region attribute in model uses uint32_t for capacity and offset
- *
- * @param quantity_in_mb the quantity to convert
- *
- * @return the quantity in MiB
- */
-uint32_t mb_to_mib(uint32_t quantity_in_mb);
-
-/*!
- * @brief convert value in GB to value in B
- * used in Drives under Chassis
- *
- * @param quantity_in_gb the quantity to convert
- *
- * @return the quantity in B
- */
-int64_t gb_to_b(double quantity_in_gb);
-
-void string_array_to_json(json::Json& json, const agent_framework::model::attribute::Array<std::string>& array);
-
-/*!
- * @brief Populates metric values for given component.
- * @param[in,out] component_json JSON representation of component.
- * @param component_uuid Component uuid.
- */
-void populate_metrics(json::Json& component_json, const std::string& component_uuid);
-
-/*!
- * @brief Populates metric values for given component.
- * @param[in,out] component_json JSON representation of component.
- * @param metrics selected metrics for populating endpoints
- */
-void populate_metrics(json::Json& component_json, const std::vector<agent_framework::model::Metric>& metrics);
-
-/*!
- * @brief Returns metric resources with particular name, and assigned to a requested resource
- *
- * @tparam T Type of model class.
- * @param resource Instance of resource from model.
- * @param metric_name String containing metric name
- *
- * @return collection of metrics fulfilling the requirements.
- */
-template <typename T>
-std::vector<agent_framework::model::Metric> get_metrics(const T& resource,
-                                                        const std::string& metric_name) {
-    return agent_framework::module::get_manager<agent_framework::model::Metric>().get_entries(
-        [&](const agent_framework::model::Metric& metric) -> bool {
-            return metric.get_component_type() == resource.get_component() && metric.get_component_uuid() == resource.get_uuid() && metric.get_name() == metric_name;
-        });
-}
-
-/*!
  * @brief Adds value to json if a value is present
  * @tparam T Type of value
  * @param json Reference to json to add value
@@ -244,13 +112,6 @@ void add_to_json_if_has_value(json::Json& json, const std::string& key, const Op
         json[key] = value;
     }
 }
-
-/*!
- * @brief Returns an Parameters object containing data used to search for the model
- * @param parameters Parameters object containing PathParams from source URI
- * @return Parameters object containing key:value pairs (key is name of PathParam)
- */
-psme::rest::server::Parameters get_network_device_request_parameters(const psme::rest::server::Parameters parameters);
 
 /*!
  * @brief Fill JSON with resource name and description (if applicable)

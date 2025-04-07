@@ -5,9 +5,11 @@
 
 #include "agent-framework/module/enum/common.hpp"
 
+#ifdef INTEL_IPU
 namespace dcqlxx {
 class Dcqlxx;
 }
+#endif
 
 namespace psme {
 namespace ipu {
@@ -20,8 +22,8 @@ public:
     CpchnlCmdHandler();
     ~CpchnlCmdHandler() = default;
     void trigger_acc_reset(agent_framework::model::enums::ResetType);
+#ifdef INTEL_IPU
 private:
-#if !defined __x86_64__
     dcqlxx::Dcqlxx& m_dcqlxx;
 #endif
 };

@@ -78,24 +78,6 @@ const std::string Routes::SIMPLE_UPDATE_ACTION_INFO_PATH =
         .append(UpdateService::SIMPLE_UPDATE_ACTION_INFO)
         .build();
 
-// "/redfish/v1/EventService"
-const std::string Routes::EVENT_SERVICE_PATH =
-    PathBuilder(PathParam::BASE_URL)
-        .append(Root::EVENT_SERVICE)
-        .build();
-
-// "/redfish/v1/EventService/Subscriptions"
-const std::string Routes::SUBSCRIPTION_COLLECTION_PATH =
-    PathBuilder(EVENT_SERVICE_PATH)
-        .append(EventService::SUBSCRIPTIONS)
-        .build();
-
-// "/redfish/v1/EventService/Subscriptions/{subscriptionId:[0-9]+}"
-const std::string Routes::SUBSCRIPTION_PATH =
-    PathBuilder(SUBSCRIPTION_COLLECTION_PATH)
-        .append_regex(PathParam::SUBSCRIPTION_ID, PathParam::ID_REGEX)
-        .build();
-
 // "/redfish/v1/SessionService"
 const std::string Routes::SESSION_SERVICE_PATH =
     PathBuilder(PathParam::BASE_URL)
@@ -152,78 +134,6 @@ const std::string Routes::MONITOR_PATH =
         .append_regex(PathParam::TASK_ID, PathParam::ID_REGEX)
         .build();
 
-// "/redfish/v1/Chassis"
-const std::string Routes::CHASSIS_COLLECTION_PATH =
-    PathBuilder(PathParam::BASE_URL)
-        .append(Common::CHASSIS)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}"
-const std::string Routes::CHASSIS_PATH =
-    PathBuilder(CHASSIS_COLLECTION_PATH)
-        .append_regex(PathParam::CHASSIS_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/Drives"
-const std::string Routes::DRIVES_COLLECTION_PATH =
-    PathBuilder(CHASSIS_PATH)
-        .append(Chassis::DRIVES)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/Drives/{driveId:[0-9]+}"
-const std::string Routes::DRIVE_PATH =
-    PathBuilder(DRIVES_COLLECTION_PATH)
-        .append_regex(PathParam::DRIVE_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/PCIeDevices"
-const std::string Routes::PCIE_DEVICES_COLLECTION_PATH =
-    PathBuilder(CHASSIS_PATH)
-        .append(Chassis::PCIE_DEVICES)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/PCIeDevices/{deviceId:[0-9]+}"
-const std::string Routes::PCIE_DEVICE_PATH =
-    PathBuilder(PCIE_DEVICES_COLLECTION_PATH)
-        .append_regex(PathParam::DEVICE_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+/PCIeDevices/{deviceId:[0-9]+/Functions"
-const std::string Routes::PCIE_FUNCTIONS_COLLECTION_PATH =
-    PathBuilder(PCIE_DEVICE_PATH)
-        .append(PathParam::FUNCTIONS)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/PCIeDevices/{deviceId:[0-9]+}/Functions/{functionId:[0-9]+}"
-const std::string Routes::PCIE_FUNCTION_PATH =
-    PathBuilder(PCIE_FUNCTIONS_COLLECTION_PATH)
-        .append_regex(PathParam::FUNCTION_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/NetworkAdapters"
-const std::string Routes::NETWORK_ADAPTERS_COLLECTION_PATH =
-    PathBuilder(CHASSIS_PATH)
-        .append(Chassis::NETWORK_ADAPTERS)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/NetworkAdapters/{networkAdapterId:[0-9]+}"
-const std::string Routes::NETWORK_ADAPTER_PATH =
-    PathBuilder(NETWORK_ADAPTERS_COLLECTION_PATH)
-        .append_regex(PathParam::NETWORK_ADAPTER_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/NetworkAdapters/{networkAdapterId:[0-9]+}/NetworkDeviceFunctions"
-const std::string Routes::CHASSIS_NETWORK_DEVICE_FUNCTIONS_COLLECTION_PATH =
-    PathBuilder(NETWORK_ADAPTER_PATH)
-        .append(NetworkInterface::NETWORK_DEVICE_FUNCTIONS)
-        .build();
-
-// "/redfish/v1/Chassis/{chassisId:[0-9]+}/NetworkAdapters/{networkAdapterId:[0-9]+}/NetworkDeviceFunctions/{networkDeviceFunctionId:[0-9]+}"
-const std::string Routes::CHASSIS_NETWORK_DEVICE_FUNCTION_PATH =
-    PathBuilder(CHASSIS_NETWORK_DEVICE_FUNCTIONS_COLLECTION_PATH)
-        .append_regex(PathParam::NETWORK_DEVICE_FUNCTION_ID, PathParam::ID_REGEX)
-        .build();
-
 // "/redfish/v1/Managers"
 const std::string Routes::MANAGER_COLLECTION_PATH =
     PathBuilder(PathParam::BASE_URL)
@@ -243,48 +153,6 @@ const std::string Routes::MANAGER_RESET_PATH =
         .append(Manager::MANAGER_RESET)
         .build();
 
-// "/redfish/v1/Managers/{managerId:[0-9]+}/EthernetInterfaces"
-const std::string Routes::MANAGER_NETWORK_INTERFACE_COLLECTION_PATH =
-    PathBuilder(MANAGER_PATH)
-        .append(Manager::ETHERNET_INTERFACES)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/EthernetInterfaces/{nicId:[0-9]+}"
-const std::string Routes::MANAGER_NETWORK_INTERFACE_PATH =
-    PathBuilder(MANAGER_NETWORK_INTERFACE_COLLECTION_PATH)
-        .append_regex(PathParam::NIC_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/NetworkProtocol"
-const std::string Routes::NETWORK_PROTOCOL_PATH =
-    PathBuilder(MANAGER_PATH)
-        .append(Manager::NETWORK_PROTOCOL)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/LogServices"
-const std::string Routes::MANAGER_LOG_SERVICES_COLLECTION_PATH =
-    PathBuilder(MANAGER_PATH)
-        .append(Common::LOG_SERVICES)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/LogServices/{logServiceId:[0-9]+}"
-const std::string Routes::MANAGER_LOG_SERVICE_PATH =
-    PathBuilder(MANAGER_LOG_SERVICES_COLLECTION_PATH)
-        .append_regex(PathParam::LOG_SERVICE_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/LogServices/{logServiceId:[0-9]+}/Entries"
-const std::string Routes::MANAGER_LOG_ENTRY_COLLECTION_PATH =
-    PathBuilder(MANAGER_LOG_SERVICE_PATH)
-        .append(LogService::ENTRIES)
-        .build();
-
-// "/redfish/v1/Managers/{managerId:[0-9]+}/LogServices/{logServiceId:[0-9]+}/Entries/{entryId:[0-9]+}"
-const std::string Routes::MANAGER_LOG_ENTRY_PATH =
-    PathBuilder(MANAGER_LOG_ENTRY_COLLECTION_PATH)
-        .append_regex(PathParam::LOG_ENTRY_ID, PathParam::ID_REGEX)
-        .build();
-
 // "/redfish/v1/Systems"
 const std::string Routes::SYSTEMS_COLLECTION_PATH =
     PathBuilder(PathParam::BASE_URL)
@@ -302,66 +170,6 @@ const std::string Routes::SYSTEM_RESET_PATH =
     PathBuilder(SYSTEM_PATH)
         .append(Common::ACTIONS)
         .append(System::COMPUTER_SYSTEM_RESET)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Storage"
-const std::string Routes::STORAGE_SUBSYSTEMS_COLLECTION_PATH =
-    PathBuilder(SYSTEM_PATH)
-        .append(System::STORAGE)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Storage/{storageId:[0-9]+}"
-const std::string Routes::STORAGE_SUBSYSTEM_PATH =
-    PathBuilder(STORAGE_SUBSYSTEMS_COLLECTION_PATH)
-        .append_regex(PathParam::STORAGE_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/EthernetInterfaces"
-const std::string Routes::SYSTEM_ETHERNET_INTERFACES_COLLECTION_PATH =
-    PathBuilder(SYSTEM_PATH)
-        .append(System::ETHERNET_INTERFACES)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/EthernetInterfaces/{nicId:[0-9]+}"
-const std::string Routes::SYSTEM_ETHERNET_INTERFACE_PATH =
-    PathBuilder(SYSTEM_ETHERNET_INTERFACES_COLLECTION_PATH)
-        .append_regex(PathParam::NIC_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Memory"
-const std::string Routes::MEMORY_COLLECTION_PATH =
-    PathBuilder(SYSTEM_PATH)
-        .append(System::MEMORY)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Memory/{memoryId:[0-9]+}"
-const std::string Routes::MEMORY_PATH =
-    PathBuilder(MEMORY_COLLECTION_PATH)
-        .append_regex(PathParam::MEMORY_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Memory/{memoryId:[0-9]+}/Metrics"
-const std::string Routes::MEMORY_METRICS_PATH =
-    PathBuilder(MEMORY_PATH)
-        .append(Common::METRICS)
-        .build();
-
-//  "/redfish/v1/Systems/{systemId:[0-9]+}/Processors"
-const std::string Routes::PROCESSORS_COLLECTION_PATH =
-    PathBuilder(SYSTEM_PATH)
-        .append(System::PROCESSORS)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Processors/{processorId:[0-9]+}"
-const std::string Routes::PROCESSOR_PATH =
-    PathBuilder(PROCESSORS_COLLECTION_PATH)
-        .append_regex(PathParam::PROCESSOR_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/Systems/{systemId:[0-9]+}/Processors/{processorId:[0-9]+}/Metrics"
-const std::string Routes::PROCESSORS_METRICS_PATH =
-    PathBuilder(PROCESSOR_PATH)
-        .append(Common::METRICS)
         .build();
 
 // "redfish/v1/Systems/{systemId:[0-9]+}/VirtualMedia"
@@ -388,48 +196,6 @@ const std::string Routes::VIRTUAL_MEDIA_EJECT_PATH =
     PathBuilder(Routes::VIRTUAL_MEDIA_PATH)
         .append(Common::ACTIONS)
         .append(Common::VIRTUAL_MEDIA_EJECT)
-        .build();
-
-// "/redfish/v1/TelemetryService"
-const std::string Routes::TELEMETRY_SERVICE_PATH =
-    PathBuilder(PathParam::BASE_URL)
-        .append(Root::TELEMETRY_SERVICE)
-        .build();
-
-// "/redfish/v1/TelemetryService/MetricDefinitions"
-const std::string Routes::METRIC_DEFINITIONS_COLLECTION_PATH =
-    PathBuilder(TELEMETRY_SERVICE_PATH)
-        .append(TelemetryService::METRIC_DEFINITIONS)
-        .build();
-
-// "/redfish/v1/TelemetryService/MetricDefinitions/{metricDefinitionId}"
-const std::string Routes::METRIC_DEFINITION_PATH =
-    PathBuilder(METRIC_DEFINITIONS_COLLECTION_PATH)
-        .append_regex(PathParam::METRIC_DEFINITION_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/TelemetryService/MetricReportDefinitions"
-const std::string Routes::METRIC_REPORT_DEFINITIONS_COLLECTION_PATH =
-    PathBuilder(TELEMETRY_SERVICE_PATH)
-        .append(TelemetryService::METRIC_REPORT_DEFINITIONS)
-        .build();
-
-// "/redfish/v1/TelemetryService/MetricReportDefinitions/{metricReportDefinitionId}"
-const std::string Routes::METRIC_REPORT_DEFINITION_PATH =
-    PathBuilder(METRIC_REPORT_DEFINITIONS_COLLECTION_PATH)
-        .append_regex(PathParam::METRIC_REPORT_DEFINITION_ID, PathParam::ID_REGEX)
-        .build();
-
-// "/redfish/v1/TelemetryService/Triggers"
-const std::string Routes::TRIGGERS_COLLECTION_PATH =
-    PathBuilder(TELEMETRY_SERVICE_PATH)
-        .append(TelemetryService::TRIGGERS)
-        .build();
-
-// "/redfish/v1/TelemetryService/Triggers/{trigger}"
-const std::string Routes::TRIGGER_PATH =
-    PathBuilder(TRIGGERS_COLLECTION_PATH)
-        .append_regex(PathParam::TRIGGER_ID, PathParam::ID_REGEX)
         .build();
 
 // "/redfish/v1/AccountService"

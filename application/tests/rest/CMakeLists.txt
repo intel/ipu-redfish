@@ -20,8 +20,6 @@
 # </license_header>
 
 add_gtest(rest application-rest
-    endpoints/utils.cpp
-    endpoints/query_entries_test.cpp
     endpoints/id_parsing_test.cpp
     endpoints/utils_path_builder_test.cpp
     model/find_test.cpp
@@ -38,7 +36,6 @@ target_link_libraries(${test_target}
     application-rest
     agent-framework
     microhttpd
-    curl
     ${libzstd_LIBRARIES}
     ${libbrotlidec_LIBRARIES}
     gnutls

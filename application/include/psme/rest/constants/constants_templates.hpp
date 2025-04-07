@@ -43,52 +43,16 @@ const char* get_resource_id() {
 }
 
 template <>
-const char* get_resource_id<agent_framework::model::Memory>();
-
-template <>
 const char* get_resource_id<agent_framework::model::System>();
-
-template <>
-const char* get_resource_id<agent_framework::model::Chassis>();
-
-template <>
-const char* get_resource_id<agent_framework::model::Drive>();
-
-template <>
-const char* get_resource_id<agent_framework::model::StorageSubsystem>();
 
 template <>
 const char* get_resource_id<agent_framework::model::Manager>();
 
 template <>
-const char* get_resource_id<agent_framework::model::NetworkInterface>();
-
-template <>
-const char* get_resource_id<agent_framework::model::NetworkDevice>();
-
-template <>
 const char* get_resource_id<agent_framework::model::Task>();
 
 template <>
-const char* get_resource_id<agent_framework::model::NetworkDeviceFunction>();
-
-template <>
 const char* get_resource_id<agent_framework::model::MetricDefinition>();
-
-template <>
-const char* get_resource_id<agent_framework::model::Processor>();
-
-template <>
-const char* get_resource_id<agent_framework::model::PcieDevice>();
-
-template <>
-const char* get_resource_id<agent_framework::model::PcieFunction>();
-
-template <>
-const char* get_resource_id<agent_framework::model::LogService>();
-
-template <>
-const char* get_resource_id<agent_framework::model::LogEntry>();
 
 template <>
 const char* get_resource_id<agent_framework::model::VirtualMedia>();

@@ -23,10 +23,8 @@
 
 #pragma once
 
-#include "psme/rest/constants/chassis.hpp"
 #include "psme/rest/constants/routes.hpp"
 #include "psme/rest/constants/system.hpp"
-#include "psme/rest/constants/telemetry.hpp"
 
 #include <string>
 
@@ -51,36 +49,14 @@ extern const char* METADATA;
 extern const char* BASE_URL;
 extern const char* BASE_URL_WITH_SLASH;
 extern const char* METADATA_FILE;
-extern const char* SUBSCRIPTION_ID;
-extern const char* CHASSIS_ID;
 extern const char* SYSTEM_ID;
-extern const char* ADAPTER_ID;
-extern const char* DEVICE_ID;
-extern const char* DRIVE_ID;
 extern const char* MANAGER_ID;
-extern const char* NIC_ID;
-extern const char* NETWORK_INTERFACE_ID;
-extern const char* NETWORK_ADAPTER_ID;
-extern const char* NETWORK_DEVICE_FUNCTION_ID;
-extern const char* NODE_ID;
-extern const char* PROCESSOR_ID;
-extern const char* SIMPLE_STORAGE_ID;
-extern const char* MEMORY_ID;
-extern const char* FUNCTION_ID;
-extern const char* FUNCTIONS;
-extern const char* STORAGE_ID;
 extern const char* TASK_ID;
 extern const char* ODATA;
 extern const char* MESSAGE_REGISTRY_FILE_ID;
-extern const char* PSU_ID;
-extern const char* METRIC_DEFINITION_ID;
-extern const char* METRIC_REPORT_DEFINITION_ID;
-extern const char* TRIGGER_ID;
 extern const char* SESSION_ID;
 extern const char* ACCOUNT_ID;
 extern const char* ROLE_ID;
-extern const char* LOG_SERVICE_ID;
-extern const char* LOG_ENTRY_ID;
 extern const char* VIRTUAL_MEDIA_ID;
 
 extern const char PATH_SEP;
@@ -100,6 +76,7 @@ extern const char* ODATA_CONTEXT;
 extern const char* ODATA_ID;
 extern const char* ODATA_TYPE;
 extern const char* OEM;
+extern const char* INTEL;
 extern const char* ID;
 extern const char* MEMBER_ID;
 extern const char* NAME;
@@ -120,30 +97,27 @@ extern const char* CONTAINED_BY;
 extern const char* MANAGED_BY;
 extern const char* DESCRIPTION;
 extern const char* VENDOR_ID;
-extern const char* DEVICE_ID;
 extern const char* FIRMWARE_VERSION;
 extern const char* UUID;
 extern const char* ACTIONS;
 extern const char* HASH;
-extern const char* CHASSIS;
 extern const char* RESET_TYPE;
 extern const char* ALLOWABLE_RESET_TYPES;
 extern const char* TARGET;
 extern const char* SKU;
 extern const char* RELATED_ITEM;
 extern const char* MAC_ADDRESS;
-extern const char* METRICS;
 extern const char* REDUNDANCY;
 extern const char* IDENTIFIERS;
 extern const char* DURABLE_NAME;
 extern const char* DURABLE_NAME_FORMAT;
 extern const char* LUN;
 extern const char* ADMINISTRATOR;
-extern const char* LOG_SERVICES;
 extern const char* SERVICE_ENABLED;
 extern const char* VIRTUAL_MEDIA;
 extern const char* VIRTUAL_MEDIA_INSERT;
 extern const char* VIRTUAL_MEDIA_EJECT;
+extern const char* ADDITIONAL_FIRMWARE_VERSIONS;
 } // namespace Common
 
 namespace ErrorMessage {
@@ -167,6 +141,17 @@ extern const char* RESOLUTION;
 } // namespace MessageObject
 
 /*!
+ * @brief Constant literals for inventory versions.
+ * */
+namespace Inventory {
+extern const char* BOOTLOADER;
+extern const char* IMC;
+extern const char* RECOVERY;
+extern const char* OROM;
+extern const char* BOARD_ID;
+} // namespace Inventory
+
+/*!
  * @brief Constant literals for collection endpoints.
  */
 namespace Collection {
@@ -179,14 +164,12 @@ extern const char* MEMBERS;
  */
 namespace Root {
 extern const char* REDFISH_VERSION;
-extern const char* EVENT_SERVICE;
 extern const char* SESSION_SERVICE;
 extern const char* TASKS;
 extern const char* SYSTEMS;
 extern const char* MANAGERS;
 extern const char* REGISTRIES;
 extern const char* MESSAGE_REGISTRY;
-extern const char* TELEMETRY_SERVICE;
 extern const char* UPDATE_SERVICE;
 extern const char* SERVICE;
 extern const char* ACCOUNT_SERVICE;
@@ -218,86 +201,10 @@ extern const char* POWER_STATE;
 extern const char* DATE_TIME;
 extern const char* DATE_TIME_LOCAL_OFFSET;
 extern const char* SERVICE_ENTRY_POINT_UUID;
-extern const char* GRAPHICAL_CONSOLE;
-extern const char* MAX_CONCURRENT_SESSIONS;
-extern const char* CONNECT_TYPES_SUPPORTED;
-extern const char* ENABLED;
-extern const char* SERIAL_CONSOLE;
-extern const char* COMMAND_SHELL;
-extern const char* MANAGER_FOR_CHASSIS;
 extern const char* MANAGER_FOR_SERVERS;
-extern const char* MANAGER_FOR_SWITCHES;
-extern const char* MANAGER_IN_CHASSIS;
-extern const char* NETWORK_PROTOCOL;
-extern const char* ETHERNET_INTERFACES;
 extern const char* HASH_MANAGER_RESET;
 extern const char* MANAGER_RESET;
 } // namespace Manager
-
-/*!
- * @brief Constant literals for NetworkProtocol endpoint.
- */
-namespace NetworkProtocol {
-extern const char* HOST_NAME;
-extern const char* FQDN;
-extern const char* HTTP;
-extern const char* HTTPS;
-extern const char* SNMP;
-extern const char* VIRTUAL_MEDIA;
-extern const char* TELNET;
-extern const char* SSDP;
-extern const char* IPMI;
-extern const char* SSH;
-extern const char* KVMIP;
-extern const char* PROTOCOL_ENABLED;
-extern const char* PORT;
-extern const char* NOTIFY_IPV6_SCOPE;
-extern const char* NOTIFY_MULTICAST_INTERVAL;
-extern const char* NOTIFY_TTL;
-} // namespace NetworkProtocol
-
-/*!
- * @brief Constant IpAddress literals for rest endpoints.
- */
-namespace IpAddress {
-extern const char* ADDRESS;
-extern const char* ADDRESS_ORIGIN;
-extern const char* GATEWAY;
-extern const char* HOST_NAME;
-extern const char* FQDN;
-extern const char* SUBNET_MASK;
-extern const char* PREFIX_LENGTH;
-extern const char* SCOPE;
-extern const char* ADDRESS_STATE;
-} // namespace IpAddress
-
-/*!
- * @brief Constant literals for NetworkInterface endpoint.
- */
-namespace NetworkInterface {
-extern const char* PERMANENT_MAC_ADDRESS;
-extern const char* SPEED_MBPS;
-extern const char* AUTO_NEG;
-extern const char* FULL_DUPLEX;
-extern const char* MTU_SIZE;
-extern const char* HOST_NAME;
-extern const char* FQDN;
-extern const char* MAX_IPv6_STATIC_ADDRESSES;
-extern const char* IPv4_ADDRESSES;
-extern const char* IPv6_ADDRESS_POLICY_TABLE;
-extern const char* PREFIX;
-extern const char* PRECEDENCE;
-extern const char* LABEL;
-extern const char* IPv6_STATIC_ADDRESSES;
-extern const char* IPv6_ADDRESSES;
-extern const char* IPv6_DEFAULT_GATEWAY;
-extern const char* NAME_SERVERS;
-extern const char* INTERFACE_ENABLED;
-extern const char* UEFI_DEVICE_PATH;
-extern const char* VLANS;
-extern const char* VLAN;
-extern const char* LINK_STATUS;
-} // namespace NetworkInterface
 
 /*!
  * @brief Constant literals for ActionInfo endpoint.
@@ -324,50 +231,6 @@ extern const char* TARGETS;
 extern const char* USER_NAME;
 extern const char* PASSWORD;
 } // namespace UpdateService
-
-/*!
- * @brief Constant literals for EventService endpoint.
- */
-namespace EventService {
-extern const char* DELIVERY_RETRY_ATTEMPTS;
-extern const char* DELIVERY_RETRY_INTERVAL_SECONDS;
-extern const char* EVENT_TYPES_FOR_SUBSCRIPTION;
-extern const char* SUBSCRIPTIONS;
-} // namespace EventService
-
-/*!
- * @brief Constant literals for EventSubscription endpoint.
- */
-namespace EventSubscription {
-extern const char* DESTINATION;
-extern const char* CONTEXT;
-extern const char* PROTOCOL;
-extern const char* EVENT_TYPES;
-extern const char* ORIGIN_RESOURCES;
-} // namespace EventSubscription
-
-/*!
- * @brief Constant literals for EventArray class representing Redfish Event.
- */
-namespace EventArray {
-extern const char* CONTEXT;
-extern const char* EVENTS;
-} // namespace EventArray
-
-/*!
- * @brief Constant literals for Event class representing Redfish EventRecord.
- */
-namespace Event {
-extern const char* EVENT_TYPE;
-extern const char* EVENT_ID;
-extern const char* EVENT_TIMESTAMP;
-extern const char* SEVERITY;
-extern const char* MESSAGE;
-extern const char* MESSAGE_ID;
-extern const char* MESSAGE_ARGS;
-extern const char* CONTEXT;
-extern const char* ORIGIN_OF_CONDITION;
-} // namespace Event
 
 /*!
  * @brief Constant literals for TaskService endpoint.
@@ -470,30 +333,6 @@ extern const char* IS_PREDEFINED;
 extern const char* ASSIGNED_PRIVILEGES;
 extern const char* ROLE_ID;
 } // namespace Role
-
-/*!
- * @brief Constant literals for LogService endpoint.
- * */
-namespace LogService {
-extern const char* LOG_ENTRY_TYPE;
-extern const char* OVERWRITE_POLICY;
-extern const char* ENTRIES;
-} // namespace LogService
-
-/*!
- * @brief Constant literals for LogEntry endpoint.
- * */
-namespace LogEntry {
-extern const char* ENTRY_TYPE;
-extern const char* ENTRY_CODE;
-extern const char* EVENT_TIMESTAMP;
-extern const char* LINKS;
-extern const char* ORIGIN_OF_CONDITION;
-extern const char* SENSOR_TYPE;
-extern const char* SENSOR_NUMBER;
-extern const char* MESSAGE;
-extern const char* MESSAGE_ID;
-} // namespace LogEntry
 
 /*!
  * @brief Constant literals for VirtualMedia endpoint.

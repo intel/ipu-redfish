@@ -1,7 +1,7 @@
+# <license_header>
+#
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (C) 2024 Intel Corporation
-
-# <license_header>
 #
 # Copyright (c) 2015-2019 Intel Corporation
 #
@@ -19,8 +19,17 @@
 #
 # </license_header>
 
-if (NOT ENABLE_TESTS)
-    return()
-endif()
+FetchContent_Declare(nlohmann_json
+    URL "https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz"
+    URL_HASH MD5=127794b2c82c0c5693805feaa2a703e2
+)
 
-add_subdirectory(rest)
+FetchContent_Declare(nlohmann_json_schema
+    URL "https://github.com/pboettch/json-schema-validator/archive/refs/tags/2.3.0.tar.gz"
+    URL_HASH MD5=a6fbc02a604988c1f75139c28cd768f8
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
+FetchContent_MakeAvailable(nlohmann_json_schema)
+
+target_compile_options(nlohmann_json_schema_validator PRIVATE -w)

@@ -12,15 +12,18 @@ const char* BOOT_TYPE = "BootType";
 const char* ERROR = "Error";
 const char* IP_VERSION = "IpVersion";
 const char* VPORT_ID = "VPortId";
+const char* NONE = "None";
+const char* CURRENT_BOOT_OPTION = "current_boot_option";
 const char* DOWNLOADED_IMAGE_NAME = "DownloadedImageName";
 const char* IMAGE_TEMP_FOLDER = "/tmp/";
 const char VIRTUAL_MEDIA_ENTITY_NAME[] = "VirtualMedia";
-const uint64_t MAX_IMAGE_SIZE = 10'000'000'000L;
-const uint64_t MAX_PLDM_IMAGE_SIZE = 1'500'000'000; // /tmp on IMC has 1.8G
-const uint64_t CHUNK_SIZE = 500'000'000;            // Size of chunks to use when downloading the image from HTTP (500MB)
+const uint64_t MAX_IMAGE_SIZE = 13'760 * 1024 * 1024L; // same size as the acc_ramdisk region in reserved-memory.json
+const uint64_t MAX_PLDM_IMAGE_SIZE = 1'500'000'000;    // /tmp on IMC has 1.8G
+const uint64_t CHUNK_SIZE = 500'000'000;               // Size of chunks to use when downloading the image from HTTP (500MB)
 
-#if defined __aarch64__
-const char* ACC_BOOT_OPTION_FILEPATH = "/mnt/imc/acc_variable/acc-uefi-boot-config.json";
+#ifdef INTEL_IPU
+const char* ACC_BOOT_OVERRIDE_FILEPATH = "/mnt/imc/acc_variable/acc-uefi-boot-config.json";
+const char* ACC_BOOT_OPTION_FILEPATH = "/mnt/imc/acc_variable/acc-boot-option.json";
 const char* RESERVED_MEMORY_DIRECTORY = "/work/cfg/memory/";
 const char* RESERVED_MEMORY_FILEPATH = "/work/cfg/memory/reserved-memory.json";
 const char* IMAGE_FOLDER = "/mnt/imc/";
@@ -32,7 +35,8 @@ const char* FIRMWARE_VERSION_FILEPATH = "/etc/issue.net";
 const char* DESTINATION_PLDM_FILEPATH = "/work/image.pldm";
 const char* PLDM_FILE_FOLDER = "/tmp/";
 #else
-const char* ACC_BOOT_OPTION_FILEPATH = "acc-uefi-boot-config.json";
+const char* ACC_BOOT_OVERRIDE_FILEPATH = "acc-uefi-boot-config.json";
+const char* ACC_BOOT_OPTION_FILEPATH = "acc-boot-option.json";
 const char* RESERVED_MEMORY_DIRECTORY = "/tmp/";
 const char* RESERVED_MEMORY_FILEPATH = "/tmp/reserved-memory.json";
 const char* IMAGE_FOLDER = "/tmp/";

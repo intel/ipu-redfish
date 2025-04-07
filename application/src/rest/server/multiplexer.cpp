@@ -219,7 +219,7 @@ bool Multiplexer::check_public_access(const std::string& http_method, const std:
 
     const auto& candidate = select_handler(request_segments, url);
 
-    const auto endpoint_path = std::get<2>(candidate);
+    const auto& endpoint_path = std::get<2>(candidate);
     if ((endpoint_path == constants::Routes::SESSION_COLLECTION_PATH && http_method == "POST") ||
         ((endpoint_path == constants::Routes::REDFISH_PATH ||
           endpoint_path == constants::Routes::ROOT_PATH ||

@@ -72,10 +72,8 @@ set(SOURCES
 
     constants/constants.cpp
     constants/constants_templates.cpp
-    constants/chassis.cpp
     constants/system.cpp
     constants/routes.cpp
-    constants/telemetry.cpp
 
     endpoints/endpoint_base.cpp
     endpoints/redfish.cpp
@@ -89,19 +87,9 @@ set(SOURCES
     endpoints/manager/manager_collection.cpp
     endpoints/manager/manager.cpp
     endpoints/manager/manager_reset.cpp
-    endpoints/manager/network_protocol.cpp
-    endpoints/manager/manager_network_interface_collection.cpp
-    endpoints/manager/manager_network_interface.cpp
-    endpoints/manager/log_services_collection.cpp
-    endpoints/manager/log_service.cpp
-    endpoints/manager/log_entry_collection.cpp
-    endpoints/manager/log_entry.cpp
     endpoints/update_service.cpp
     endpoints/simple_update.cpp
     endpoints/simple_update_action_info.cpp
-    endpoints/event_service.cpp
-    endpoints/event_subscriptions_collection.cpp
-    endpoints/event_subscription.cpp
     endpoints/session_service.cpp
     endpoints/session_collection.cpp
     endpoints/session.cpp
@@ -117,43 +105,10 @@ set(SOURCES
     endpoints/system/systems_collection.cpp
     endpoints/system/system.cpp
     endpoints/system/system_reset.cpp
-    endpoints/system/processors_collection.cpp
-    endpoints/system/processor.cpp
-    endpoints/system/processor_metrics.cpp
-    endpoints/system/storage_subsystems_collection.cpp
-    endpoints/system/storage_subsystem.cpp
-    endpoints/system/memory_collection.cpp
-    endpoints/system/memory.cpp
-    endpoints/system/memory_metrics.cpp
-    endpoints/system/system_network_interface_collection.cpp
-    endpoints/system/system_network_interface.cpp
-    endpoints/system/network_interface.cpp
-    endpoints/system/network_interfaces_collection.cpp
-    endpoints/system/network_device_functions_collection.cpp
-    endpoints/system/network_device_function.cpp
     endpoints/system/virtual_media.cpp
     endpoints/system/virtual_media_collection.cpp
     endpoints/system/virtual_media_insert.cpp
     endpoints/system/virtual_media_eject.cpp
-
-    endpoints/chassis/chassis_collection.cpp
-    endpoints/chassis/chassis.cpp
-    endpoints/chassis/drives_collection.cpp
-    endpoints/chassis/drive.cpp
-    endpoints/chassis/pcie_device.cpp
-    endpoints/chassis/pcie_devices_collection.cpp
-    endpoints/chassis/pcie_function.cpp
-    endpoints/chassis/pcie_functions_collection.cpp
-    endpoints/chassis/network_adapter_collection.cpp
-    endpoints/chassis/network_adapter.cpp
-
-    endpoints/telemetry/telemetry_service.cpp
-    endpoints/telemetry/metric_definition.cpp
-    endpoints/telemetry/metric_definitions_collection.cpp
-    endpoints/telemetry/metric_report_definition.cpp
-    endpoints/telemetry/metric_report_definitions_collection.cpp
-    endpoints/telemetry/trigger.cpp
-    endpoints/telemetry/triggers_collection.cpp
 
     endpoints/account_service/account_service.cpp
     endpoints/account_service/account.cpp
@@ -162,14 +117,6 @@ set(SOURCES
     endpoints/account_service/role_collection.cpp
 
     endpoints/endpoint_builder.cpp
-
-    eventing/event.cpp
-    eventing/event_array.cpp
-    eventing/event_service.cpp
-    eventing/event_array_queue.cpp
-    eventing/rest_client.cpp
-    eventing/model/subscription.cpp
-    eventing/manager/subscription_manager.cpp
 
     model/handlers/id_memoizer.cpp
     model/resource_handler.cpp
@@ -186,7 +133,6 @@ set(SOURCES
 
     validators/json_validator.cpp
     validators/schemas/common.cpp
-    validators/schemas/subscription_collection.cpp
     validators/schemas/session_collection.cpp
     validators/schemas/session_service.cpp
     validators/schemas/system.cpp
@@ -222,6 +168,10 @@ add_library(application-rest STATIC ${SOURCES})
 # Since app also uses generated metadata, it should wait for the headers
 # to be generated
 add_dependencies(application-rest metadata_generate_headers)
+
+if(IPU)
+    target_compile_definitions(application-rest PUBLIC INTEL_IPU)
+endif()
 
 target_link_libraries(application-rest
     PRIVATE

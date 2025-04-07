@@ -61,7 +61,7 @@ public:
     static constexpr const char SERVER_CERT_FILENAME[] = "server.crt";
 
     /*! @brief CA-bundle's certificate path */
-#ifdef __aarch64__
+#ifdef INTEL_IPU
     static constexpr const char CA_BUNDLE_PATH[] = "/etc/ssl/certs/ca-bundle.crt";
 #else
     static constexpr const char CA_BUNDLE_PATH[] = "./ca-bundle.crt";

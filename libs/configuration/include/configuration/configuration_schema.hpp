@@ -21,8 +21,8 @@ static json::Json DEFAULT_VALIDATOR_JSON = R"~(
         "server": {
             "type": "object",
             "properties": {
-                "network-interface-name": {
-                    "type": "string"
+                "restricted-to-interface": {
+                    "type": ["string", "null"]
                 },
                 "certs-directory": {
                     "type": "string",
@@ -54,21 +54,7 @@ static json::Json DEFAULT_VALIDATOR_JSON = R"~(
                     "enum": ["none", "basic", "session", "basic-or-session"]
                 }
             },
-            "required": ["network-interface-name", "certs-directory", "port", "thread-mode", "client-cert-required", "authentication-type"]
-        },
-        "event-service": {
-            "type": "object",
-            "properties": {
-                "delivery-retry-attempts": {
-                    "type": "integer",
-                    "description": "Number of delivery retry attempts"
-                },
-                "delivery-retry-interval-seconds": {
-                    "type": "integer",
-                    "description": "Interval between delivery retries in seconds"
-                }
-            },
-            "required": ["delivery-retry-attempts", "delivery-retry-interval-seconds"]
+            "required": ["restricted-to-interface", "certs-directory", "port", "thread-mode", "client-cert-required", "authentication-type"]
         },
         "authentication": {
             "type": "object",
@@ -206,7 +192,7 @@ static json::Json DEFAULT_VALIDATOR_JSON = R"~(
             }
         }
     },
-    "required": ["service", "server", "event-service", "authentication", "session-service", "ssdp-service", "database", "loggers"]
+    "required": ["service", "server", "authentication", "session-service", "ssdp-service", "database", "loggers"]
 })~"_json;
 
 } // namespace app

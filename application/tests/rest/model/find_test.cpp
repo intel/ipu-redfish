@@ -36,7 +36,7 @@ namespace rest {
 namespace server {
 
 using SystemManager = agent_framework::module::GenericManager<agent_framework::model::System>;
-using ProcessorManager = agent_framework::module::GenericManager<agent_framework::model::Processor>;
+using VirtualMediaManager = agent_framework::module::GenericManager<agent_framework::model::VirtualMedia>;
 
 class TestEndpointForFindApi : public MethodsHandler {
 public:
@@ -54,14 +54,14 @@ TestEndpointForFindApi::~TestEndpointForFindApi() {}
 class FindTest : public Test {
 public:
     FindTest() : m_systems(agent_framework::module::get_manager<agent_framework::model::System>()),
-                 m_processors(agent_framework::module::get_manager<agent_framework::model::Processor>()) {
+                 m_virtual_media(agent_framework::module::get_manager<agent_framework::model::VirtualMedia>()) {
 
         m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::REDFISH_PATH)));
         m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::ROOT_PATH)));
         m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::SYSTEMS_COLLECTION_PATH)));
         m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::SYSTEM_PATH)));
-        m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::PROCESSORS_COLLECTION_PATH)));
-        m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::PROCESSOR_PATH)));
+        m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::VIRTUAL_MEDIA_COLLECTION_PATH)));
+        m_multiplexer.register_handler(TestEndpointForFindApi::UPtr(new TestEndpointForFindApi(Routes::VIRTUAL_MEDIA_PATH)));
     }
     ~FindTest();
 
@@ -71,104 +71,104 @@ public:
         S1.set_id(1);
         m_systems.add_entry(S1);
 
-        auto S1Proc1 = agent_framework::model::Processor("system_S1");
-        S1Proc1.set_uuid("S1_processor_P1");
+        auto S1Proc1 = agent_framework::model::VirtualMedia("system_S1");
+        S1Proc1.set_uuid("S1_virtual_media_P1");
         S1Proc1.set_id(1);
-        m_processors.add_entry(S1Proc1);
+        m_virtual_media.add_entry(S1Proc1);
 
-        auto S1Proc2 = agent_framework::model::Processor("system_S1");
-        S1Proc2.set_uuid("S1_processor_P2");
+        auto S1Proc2 = agent_framework::model::VirtualMedia("system_S1");
+        S1Proc2.set_uuid("S1_virtual_media_P2");
         S1Proc2.set_id(2);
-        m_processors.add_entry(S1Proc2);
+        m_virtual_media.add_entry(S1Proc2);
 
         auto S2 = agent_framework::model::System("");
         S2.set_uuid("system_S2");
         S2.set_id(2);
         m_systems.add_entry(S2);
 
-        auto S2Proc1 = agent_framework::model::Processor("system_S2");
-        S2Proc1.set_uuid("S2_processor_P1");
+        auto S2Proc1 = agent_framework::model::VirtualMedia("system_S2");
+        S2Proc1.set_uuid("S2_virtual_media_P1");
         S2Proc1.set_id(1);
-        m_processors.add_entry(S2Proc1);
+        m_virtual_media.add_entry(S2Proc1);
 
-        auto S2Proc2 = agent_framework::model::Processor("system_S2");
-        S2Proc2.set_uuid("S2_processor_P2");
+        auto S2Proc2 = agent_framework::model::VirtualMedia("system_S2");
+        S2Proc2.set_uuid("S2_virtual_media_P2");
         S2Proc2.set_id(2);
-        m_processors.add_entry(S2Proc2);
+        m_virtual_media.add_entry(S2Proc2);
     }
 
     void TearDown() override {
         m_systems.clear_entries();
-        m_processors.clear_entries();
+        m_virtual_media.clear_entries();
     }
 
     Multiplexer m_multiplexer{};
     SystemManager& m_systems;
-    ProcessorManager& m_processors;
+    VirtualMediaManager& m_virtual_media;
 };
 
 FindTest::~FindTest() {}
 
 TEST_F(FindTest, TestFindDirectly_ThrowAfterNotFound) {
-    const auto path = "/redfish/v1/Systems/2/Processors/1";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/1";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
     ASSERT_THROW(model::find<agent_framework::model::Manager>(params).get_uuid(), agent_framework::exceptions::NotFound);
 }
 
 TEST_F(FindTest, TestFindDirectly_NoThrowAfterFound) {
-    const auto path = "/redfish/v1/Systems/2/Processors/1";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/1";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
-    ASSERT_NO_THROW(model::find<agent_framework::model::Processor>(params).get_uuid());
+    ASSERT_NO_THROW(model::find<agent_framework::model::VirtualMedia>(params).get_uuid());
     ASSERT_NO_THROW(
-        (model::find<agent_framework::model::System, agent_framework::model::Processor>(params).get_uuid()));
+        (model::find<agent_framework::model::System, agent_framework::model::VirtualMedia>(params).get_uuid()));
 }
 
 TEST_F(FindTest, TestFindIndirectly) {
-    const auto path = "/redfish/v1/Systems/2/Processors/2";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/2";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
     ASSERT_EQ("system_S2", model::find<agent_framework::model::System>(params).get_uuid());
-    ASSERT_EQ("S2_processor_P2",
-              (model::find<agent_framework::model::System, agent_framework::model::Processor>(params).get_uuid()));
+    ASSERT_EQ("S2_virtual_media_P2",
+              (model::find<agent_framework::model::System, agent_framework::model::VirtualMedia>(params).get_uuid()));
 }
 
 TEST_F(FindTest, TestFindNoexceptDirectly_NoThrowAfterNotFound) {
-    const auto path = "/redfish/v1/Systems/2/Processors/1";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/1";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
     ASSERT_NO_THROW(model::try_find<agent_framework::model::Manager>(params).get_uuid());
 }
 
 TEST_F(FindTest, TestFindNoexceptDirectly_NoThrowAfterFound) {
-    const auto path = "/redfish/v1/Systems/2/Processors/1";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/1";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
-    ASSERT_NO_THROW(model::try_find<agent_framework::model::Processor>(params).get_uuid());
+    ASSERT_NO_THROW(model::try_find<agent_framework::model::VirtualMedia>(params).get_uuid());
     ASSERT_NO_THROW(
-        (model::try_find<agent_framework::model::System, agent_framework::model::Processor>(params).get_uuid()));
+        (model::try_find<agent_framework::model::System, agent_framework::model::VirtualMedia>(params).get_uuid()));
 }
 
 TEST_F(FindTest, TestFindNoexceptIndirectly) {
-    const auto path = "/redfish/v1/Systems/2/Processors/2";
-    const auto params = m_multiplexer.get_params(path, Routes::PROCESSOR_PATH);
+    const auto path = "/redfish/v1/Systems/2/VirtualMedia/2";
+    const auto params = m_multiplexer.get_params(path, Routes::VIRTUAL_MEDIA_PATH);
 
     auto opt_uuid = model::try_find<agent_framework::model::System>(params).get_uuid();
     ASSERT_EQ("system_S2", opt_uuid.value());
     opt_uuid =
-        model::try_find<agent_framework::model::System, agent_framework::model::Processor>(params).get_uuid();
-    ASSERT_EQ("S2_processor_P2", opt_uuid.value());
+        model::try_find<agent_framework::model::System, agent_framework::model::VirtualMedia>(params).get_uuid();
+    ASSERT_EQ("S2_virtual_media_P2", opt_uuid.value());
 }
 
 TEST_F(FindTest, TestFindNoexceptToBool) {
-    const auto true_path = "/redfish/v1/Systems/2/Processors/2";
-    const auto false_path = "/redfish/v1/Systems/2/Processors/3";
-    const auto true_params = m_multiplexer.get_params(true_path, Routes::PROCESSOR_PATH);
-    const auto false_params = m_multiplexer.get_params(false_path, Routes::PROCESSOR_PATH);
+    const auto true_path = "/redfish/v1/Systems/2/VirtualMedia/2";
+    const auto false_path = "/redfish/v1/Systems/2/VirtualMedia/3";
+    const auto true_params = m_multiplexer.get_params(true_path, Routes::VIRTUAL_MEDIA_PATH);
+    const auto false_params = m_multiplexer.get_params(false_path, Routes::VIRTUAL_MEDIA_PATH);
 
-    ASSERT_EQ(true, (model::try_find<agent_framework::model::System, agent_framework::model::Processor>(true_params)));
-    ASSERT_EQ(false, (model::try_find<agent_framework::model::System, agent_framework::model::Processor>(false_params)));
+    ASSERT_EQ(true, (model::try_find<agent_framework::model::System, agent_framework::model::VirtualMedia>(true_params)));
+    ASSERT_EQ(false, (model::try_find<agent_framework::model::System, agent_framework::model::VirtualMedia>(false_params)));
 }
 
 } // namespace server

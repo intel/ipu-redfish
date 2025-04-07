@@ -4,10 +4,11 @@
 #include "ipu/loader.hpp"
 #include "agent-framework/database/database_entity.hpp"
 #include "agent-framework/module/enum/common.hpp"
+#include "agent-framework/module/enum/compute.hpp"
 #include "agent-framework/module/model/manager.hpp"
-#include "ipu/acc_boot_option_handler.hpp"
 #include "ipu/firmware_build_getter.hpp"
 #include "ipu/ipu_constants.hpp"
+#include "ipu/ipu_update_handler.hpp"
 
 // TODO: fix cyclic dependency
 #include "model/handlers/id_policy.hpp"
@@ -27,7 +28,18 @@ void Loader::load() {
     System acc{};
     acc.set_name("ACC");
     acc.set_description("Acceleration Compute Complex");
-    acc.set_system_type(agent_framework::model::enums::SystemType::DPU);
+    acc.set_system_type(SystemType::DPU);
+    acc.set_status({State::Enabled, Health::OK});
+    acc.add_boot_override_supported(BootOverride::Once);
+    acc.add_boot_override_supported(BootOverride::Continuous);
+    acc.add_boot_override_target_supported(BootOverrideTarget::Cd);
+    acc.add_boot_override_target_supported(BootOverrideTarget::RemoteDrive);
+    acc.add_boot_override_target_supported(BootOverrideTarget::Utilities);
+    acc.add_boot_override_target_supported(BootOverrideTarget::UefiShell);
+    acc.set_boot_override_mode(BootOverrideMode::UEFI);
+    // set initial values in case the boot override config file doesn't exist
+    acc.set_boot_override(BootOverride::Disabled);
+    acc.set_boot_override_target(BootOverrideTarget::None);
     acc.set_unique_key(acc.get_name());
     acc.make_persistent_uuid();
 
@@ -37,14 +49,23 @@ void Loader::load() {
     Manager imc{};
     imc.set_name("IMC");
     imc.set_description("Integrated Management Complex");
+    imc.set_status({State::Enabled, Health::OK});
     imc.set_unique_key(imc.get_name());
     imc.make_persistent_uuid();
     imc.set_firmware_version(FirmwareBuildGetter().value());
 
+    InventoryVersion inventory = IpuUpdateHandler().get_component_info();
+    imc.set_board_id_version(inventory.board_id_version);
+    imc.set_boot_image_version(inventory.boot_image_version);
+    imc.set_imc_version(inventory.imc_version);
+    imc.set_imc_orom_version(inventory.imc_orom_version);
+    imc.set_recovery_imc_version(inventory.recovery_imc_version);
+    acc.set_bios_version(inventory.acc_bios_version);
+
     IdPolicy<Component::Manager, NumberingZone::SHARED> manager_id_policy;
     imc.set_id(manager_id_policy.get_id(imc.get_uuid(), ""));
 
-    imc.set_allowed_reset_actions(Manager::AllowedResetActions{agent_framework::model::enums::ResetType::ForceRestart});
+    imc.set_allowed_reset_actions(Manager::AllowedResetActions{ResetType::ForceRestart});
 
     acc.set_manager(imc.get_uuid());
 
@@ -75,12 +96,4 @@ void Loader::load() {
     IdPolicy<Component::VirtualMedia, NumberingZone::PARENT_SPACE> media_id_policy;
     media.set_id(media_id_policy.get_id(media.get_uuid(), acc.get_uuid()));
     get_manager<agent_framework::model::VirtualMedia>().add_entry(media);
-
-    try {
-        AccBootOptionHandler handler;
-        handler.init();
-    }
-    catch (...) {
-        log_error("ipu", "Failed to load the boot override configuration");
-    }
 }

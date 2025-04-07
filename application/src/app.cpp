@@ -29,8 +29,6 @@
 #include "configuration/configuration_schema.hpp"
 #include "context.hpp"
 #include "database/database.hpp"
-#include "psme/rest/eventing/event_service.hpp"
-#include "psme/rest/eventing/manager/subscription_manager.hpp"
 #include "psme/rest/registries/config/base_configuration.hpp"
 #include "psme/rest/registries/config/registry_configurator.hpp"
 #include "psme/rest/security/session/session_service.hpp"
@@ -59,7 +57,6 @@ void App::run() {
         if (m_network_change_notifier) {
             m_network_change_notifier->start();
         }
-        m_rest_event_service->start();
         m_rest_session_service->start();
         m_rest_server->start();
         m_ssdp_service->start();
@@ -86,9 +83,7 @@ void App::init(const char* config_path) {
         init_network_change_notifier();
         init_ssdp_service();
         Context::get_instance()->initialize();
-        init_rest_event_service();
         init_rest_session_service();
-        psme::rest::eventing::manager::SubscriptionManager::get_instance();
         init_registries();
         init_rest_server();
     }
@@ -162,10 +157,6 @@ void App::init_rest_server() {
     m_rest_server = std::make_unique<psme::rest::server::RestServer>();
 }
 
-void App::init_rest_event_service() {
-    m_rest_event_service = std::make_unique<psme::rest::eventing::EventService>();
-}
-
 void App::init_rest_session_service() {
     m_rest_session_service = std::make_unique<psme::rest::security::session::SessionService>();
 }
@@ -176,10 +167,6 @@ void App::init_registries() {
 }
 
 void App::cleanup() {
-    if (m_rest_event_service) {
-        m_rest_event_service->stop();
-        m_rest_event_service.reset();
-    }
     if (m_rest_session_service) {
         m_rest_session_service->stop();
         m_rest_session_service.reset();
@@ -196,12 +183,11 @@ void App::cleanup() {
         m_network_change_notifier->stop();
         m_network_change_notifier.reset();
     }
-    psme::rest::eventing::manager::SubscriptionManager::get_instance()->clean_up();
     Configuration::cleanup();
 }
 
 void App::check_permissions() {
-#if defined __aarch64__
+#ifdef INTEL_IPU
     if (getuid() != 0) {
         throw std::runtime_error("This application must be run as root");
     }

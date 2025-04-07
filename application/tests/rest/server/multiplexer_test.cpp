@@ -58,8 +58,8 @@ public:
         m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::ROOT_PATH)));
         m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::SYSTEMS_COLLECTION_PATH)));
         m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::SYSTEM_PATH)));
-        m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::SYSTEM_ETHERNET_INTERFACES_COLLECTION_PATH)));
-        m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::SYSTEM_ETHERNET_INTERFACE_PATH)));
+        m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::VIRTUAL_MEDIA_COLLECTION_PATH)));
+        m_multiplexer.register_handler(TestEndpoint::UPtr(new TestEndpoint(Routes::VIRTUAL_MEDIA_PATH)));
     }
 
     ~MultiplexerTest();
@@ -74,8 +74,8 @@ TEST_F(MultiplexerTest, AllowableURL) {
     ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1"));
     ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems"));
     ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100"));
-    ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/EthernetInterfaces"));
-    ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/EthernetInterfaces/500"));
+    ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/VirtualMedia"));
+    ASSERT_TRUE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/VirtualMedia/500"));
 }
 
 TEST_F(MultiplexerTest, NotAllowableURL) {
@@ -89,9 +89,9 @@ TEST_F(MultiplexerTest, NotAllowableURL) {
     ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/......"));
     ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/żółć"));
     ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/1/2"));
-    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/EthernetInterfaces/100"));
-    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/EthernetInterfaces/500/Systems/100"));
-    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/EthernetInterfaces/500/EthernetInterfaces/500"));
+    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/VirtualMedia/100"));
+    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/VirtualMedia/500/Systems/100"));
+    ASSERT_FALSE(m_multiplexer.is_correct_endpoint_url("/redfish/v1/Systems/100/VirtualMedia/500/VirtualMedia/500"));
 }
 
 TEST_F(MultiplexerTest, TestGetParams) {
@@ -100,16 +100,16 @@ TEST_F(MultiplexerTest, TestGetParams) {
 
     ASSERT_EQ(output1[PathParam::SYSTEM_ID], "3");
 
-    const auto path2 = "/redfish/v1/Systems/2/EthernetInterfaces/4";
-    const auto output2 = m_multiplexer.get_params(path2, constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH);
+    const auto path2 = "/redfish/v1/Systems/2/VirtualMedia/4";
+    const auto output2 = m_multiplexer.get_params(path2, constants::Routes::VIRTUAL_MEDIA_PATH);
 
-    ASSERT_EQ(output2[PathParam::NIC_ID], "4");
+    ASSERT_EQ(output2[PathParam::VIRTUAL_MEDIA_ID], "4");
     ASSERT_EQ(output2[PathParam::SYSTEM_ID], "2");
 
     std::vector<std::pair<std::string, std::string>> wrong_path_cases = {
-        std::make_pair("/redfish/v1/EthernetInterfaces/4/Systems/2", constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH),
-        std::make_pair("/redfish/v1/Systems/2/EthernetInterfaces/4", constants::Routes::SYSTEM_PATH),
-        std::make_pair("/redfish/v1/Systems/2", constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH),
+        std::make_pair("/redfish/v1/VirtualMedia/4/Systems/2", constants::Routes::VIRTUAL_MEDIA_PATH),
+        std::make_pair("/redfish/v1/Systems/2/VirtualMedia/4", constants::Routes::SYSTEM_PATH),
+        std::make_pair("/redfish/v1/Systems/2", constants::Routes::VIRTUAL_MEDIA_PATH),
         std::make_pair("/redfish/v1/Systems/abc", constants::Routes::SYSTEM_PATH),
         std::make_pair("/redfish/v1/Systemss/2", constants::Routes::SYSTEM_PATH),
     };
@@ -125,16 +125,16 @@ TEST_F(MultiplexerTest, TestGetParamsGamiNothrow) {
 
     ASSERT_EQ(output1[PathParam::SYSTEM_ID], "3");
 
-    const auto path2 = "/redfish/v1/Systems/2/EthernetInterfaces/4";
-    const auto output2 = m_multiplexer.try_get_params(path2, constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH);
+    const auto path2 = "/redfish/v1/Systems/2/VirtualMedia/4";
+    const auto output2 = m_multiplexer.try_get_params(path2, constants::Routes::VIRTUAL_MEDIA_PATH);
 
-    ASSERT_EQ(output2[PathParam::NIC_ID], "4");
+    ASSERT_EQ(output2[PathParam::VIRTUAL_MEDIA_ID], "4");
     ASSERT_EQ(output2[PathParam::SYSTEM_ID], "2");
 
     std::vector<std::pair<std::string, std::string>> wrong_path_cases = {
-        std::make_pair("/redfish/v1/EthernetInterfaces/4/Systems/2", constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH),
-        std::make_pair("/redfish/v1/Systems/2/EthernetInterfaces/4", constants::Routes::SYSTEM_PATH),
-        std::make_pair("/redfish/v1/Systems/2", constants::Routes::SYSTEM_ETHERNET_INTERFACE_PATH),
+        std::make_pair("/redfish/v1/VirtualMedia/4/Systems/2", constants::Routes::VIRTUAL_MEDIA_PATH),
+        std::make_pair("/redfish/v1/Systems/2/VirtualMedia/4", constants::Routes::SYSTEM_PATH),
+        std::make_pair("/redfish/v1/Systems/2", constants::Routes::VIRTUAL_MEDIA_PATH),
         std::make_pair("/redfish/v1/Systems/abc", constants::Routes::SYSTEM_PATH),
         std::make_pair("/redfish/v1/Systemss/2", constants::Routes::SYSTEM_PATH),
     };

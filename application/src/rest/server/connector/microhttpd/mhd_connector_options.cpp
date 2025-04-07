@@ -113,14 +113,19 @@ private:
     }
 
     void init_socket_address(const ConnectorOptions& options) {
-        auto iface = net::NetworkInterface::for_name(options.get_network_interface_name());
+        const auto& iface_name = options.get_network_interface_name();
+        if (!iface_name.has_value()) {
+            log_info("rest", "Starting MHD connector listening on 0.0.0.0");
+            return;
+        }
+        auto iface = net::NetworkInterface::for_name(iface_name);
         const auto& ip_address = iface.get_first_address(net::AddressFamily::IPv4);
         m_socket_address = net::SocketAddress(ip_address, options.get_port());
         m_option_array.emplace_back(MHD_OptionItem{
             MHD_OPTION_SOCK_ADDR, intptr_t(0),
             static_cast<void*>(const_cast<struct sockaddr*>(m_socket_address.addr()))});
-        log_info("rest", "Starting connector listening on " << m_socket_address
-                                                            << " (" << options.get_network_interface_name() << ")");
+        log_info("rest", "Starting MHD connector listening on " << m_socket_address
+                                                                << " (" << options.get_network_interface_name() << ")");
     }
 
     void init_debug_options(const ConnectorOptions& options) {

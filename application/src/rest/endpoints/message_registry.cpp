@@ -38,7 +38,7 @@ json::Json make_prototype() {
 
     r[constants::Common::ODATA_CONTEXT] = "/redfish/v1/$metadata#MessageRegistry.MessageRegistry";
     r[constants::Common::ODATA_ID] = json::Json::value_t::null;
-    r[constants::Common::ODATA_TYPE] = "#MessageRegistry.v1_0_0.MessageRegistry";
+    r[constants::Common::ODATA_TYPE] = "#MessageRegistry.v1_6_3.MessageRegistry";
     r[constants::MessageRegistry::LANGUAGE] = json::Json::value_t::null;
     r[constants::MessageRegistry::MESSAGES] = json::Json::value_t::null;
     r[constants::MessageRegistry::OWNING_ENTITY] = json::Json::value_t::null;

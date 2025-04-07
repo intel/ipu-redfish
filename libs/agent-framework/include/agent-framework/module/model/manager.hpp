@@ -185,6 +185,86 @@ public:
     }
 
     /*!
+     * @brief Get Manager board id
+     * @return Manager board id
+     */
+    const OptionalField<std::string>& get_board_id_version() const {
+        return m_board_id_version;
+    }
+
+    /*!
+     * @brief Set Manager board id
+     * @param[in] Manager board id
+     * */
+    void set_board_id_version(const OptionalField<std::string>& board_id_version) {
+        m_board_id_version = board_id_version;
+    }
+
+    /*!
+     * @brief Get Manager boot image version
+     * @return Manager boot image version
+     */
+    const OptionalField<std::string>& get_boot_image_version() const {
+        return m_boot_image_version;
+    }
+
+    /*!
+     * @brief Set Manager boot image version
+     * @param[in] Manager boot image version
+     * */
+    void set_boot_image_version(const OptionalField<std::string>& boot_image_version) {
+        m_boot_image_version = boot_image_version;
+    }
+
+    /*!
+     * @brief Get Manager imc version
+     * @return Manager imc version
+     */
+    const OptionalField<std::string>& get_imc_version() const {
+        return m_imc_version;
+    }
+
+    /*!
+     * @brief Set Manager imc version
+     * @param[in] Manager imc version
+     * */
+    void set_imc_version(const OptionalField<std::string>& imc_version) {
+        m_imc_version = imc_version;
+    }
+
+    /*!
+     * @brief Get Manager imc orom version
+     * @return Manager imc orom version
+     */
+    const OptionalField<std::string>& get_imc_orom_version() const {
+        return m_imc_orom_version;
+    }
+
+    /*!
+     * @brief Set Manager imc orom version
+     * @param[in] Manager imc orom version
+     * */
+    void set_imc_orom_version(const OptionalField<std::string>& imc_orom_version) {
+        m_imc_orom_version = imc_orom_version;
+    }
+
+    /*!
+     * @brief Get Manager recovery imc version
+     * @return Manager recovery imc version
+     */
+    const OptionalField<std::string>& get_recovery_imc_version() const {
+        return m_recovery_imc_version;
+    }
+
+    /*!
+     * @brief Set Manager recovery imc version
+     * @param[in] Manager recovery imc version
+     * */
+    void set_recovery_imc_version(const OptionalField<std::string>& recovery_imc_version) {
+        m_recovery_imc_version = recovery_imc_version;
+    }
+
+    /*!
      * @brief Set presence
      * @param[in] presence Manager presence
      * */
@@ -355,6 +435,11 @@ private:
     OptionalField<std::string> m_firmware_version{};
     OptionalField<std::string> m_ipv4_address{};
     OptionalField<std::string> m_guid{};
+    OptionalField<std::string> m_board_id_version{};
+    OptionalField<std::string> m_boot_image_version{};
+    OptionalField<std::string> m_imc_version{};
+    OptionalField<std::string> m_imc_orom_version{};
+    OptionalField<std::string> m_recovery_imc_version{};
     NetworkServices m_network_services{};
     AllowedResetActions m_allowed_reset_actions{};
     attribute::GraphicalConsole m_graphical_console{};

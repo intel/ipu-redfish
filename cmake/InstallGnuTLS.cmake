@@ -19,10 +19,6 @@
 #
 # </license_header>
 
-if(CMAKE_CROSSCOMPILING)
-    return()
-endif()
-
 FetchContent_Declare(gnutls
     URL "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.3.tar.xz"
     URL_HASH MD5=269966167fa5bf8bae5f7534bcc3c454
@@ -38,8 +34,6 @@ endif()
 if(NOT gnutls_POPULATED AND NOT gnutls_FOUND)
     message("Building GnuTLS...")
     FetchContent_Populate(gnutls)
-
-    unset(ENV{PKG_CONFIG_SYSROOT_DIR})
 
     set(CONFIGURE_FLAGS)
     list(APPEND CONFIGURE_FLAGS --disable-doc)
