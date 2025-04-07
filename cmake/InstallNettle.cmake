@@ -19,10 +19,6 @@
 #
 # </license_header>
 
-if(CMAKE_CROSSCOMPILING)
-    return()
-endif()
-
 # Important: Nettle will only build libhogweed if libgmp headers & library is found
 # Make sure GMP is built before Nettle by including this file after InstallGmp.cmake
 

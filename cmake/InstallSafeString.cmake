@@ -1,7 +1,7 @@
+# <license_header>
+#
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (C) 2024 Intel Corporation
-
-# <license_header>
 #
 # Copyright (c) 2015-2019 Intel Corporation
 #
@@ -19,8 +19,13 @@
 #
 # </license_header>
 
-if (NOT ENABLE_TESTS)
-    return()
-endif()
+FetchContent_Declare(safestringlib
+    URL "https://github.com/intel/safestringlib/archive/refs/tags/v1.2.0.tar.gz"
+    URL_HASH MD5=b48ee0caac2fd8e1c5ec24504c29fb9d
+)
 
-add_subdirectory(rest)
+FetchContent_MakeAvailable(safestringlib)
+
+target_compile_options(safestring_objlib PRIVATE -w)
+target_compile_options(safestring_static PRIVATE -w)
+target_compile_options(safestring_shared PRIVATE -w)

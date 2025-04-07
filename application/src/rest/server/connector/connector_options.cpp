@@ -26,7 +26,7 @@
 
 using namespace psme::rest::server;
 
-constexpr const char ConnectorOptions::NETWORK_INTERFACE_NAME[];
+constexpr const char ConnectorOptions::RESTRICTED_TO_INTERFACE[];
 constexpr const char ConnectorOptions::PORT[];
 constexpr const char ConnectorOptions::CERTS_DIR[];
 constexpr const char ConnectorOptions::CLIENT_CERT_REQUIRED[];
@@ -43,7 +43,10 @@ constexpr const char ConnectorOptions::THREAD_POOL_SIZE[];
 constexpr const char ConnectorOptions::DEBUG_MODE[];
 
 ConnectorOptions::ConnectorOptions(const json::Json& config) {
-    m_network_interface_name = config.value(NETWORK_INTERFACE_NAME, std::string{});
+    const auto& network_interface_name = config[RESTRICTED_TO_INTERFACE];
+    if (!network_interface_name.is_null()) {
+        m_network_interface_name = network_interface_name;
+    }
     m_port = config.value(PORT, std::uint16_t{});
     const auto& thread_mode = config.value(THREAD_MODE, std::string{});
     if (thread_mode == THREAD_MODE_SELECT) {
@@ -109,6 +112,6 @@ bool ConnectorOptions::use_debug() const {
     return m_use_debug;
 }
 
-const std::string& ConnectorOptions::get_network_interface_name() const {
+const OptionalField<std::string>& ConnectorOptions::get_network_interface_name() const {
     return m_network_interface_name;
 }

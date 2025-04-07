@@ -34,9 +34,7 @@ namespace {
 static std::vector<std::pair<std::string, std::string>> RESOURCES{
     {Root::SERVICE, Routes::ROOT_PATH},
     {Root::SYSTEMS, Routes::SYSTEMS_COLLECTION_PATH},
-    {Common::CHASSIS, Routes::CHASSIS_COLLECTION_PATH},
     {Root::MANAGERS, Routes::MANAGER_COLLECTION_PATH},
-    {Root::EVENT_SERVICE, Routes::EVENT_SERVICE_PATH},
     {Root::TASKS, Routes::TASK_SERVICE_PATH},
     {Root::REGISTRIES, Routes::MESSAGE_REGISTRY_FILE_COLLECTION_PATH},
     {Root::UPDATE_SERVICE, Routes::UPDATE_SERVICE_PATH}};

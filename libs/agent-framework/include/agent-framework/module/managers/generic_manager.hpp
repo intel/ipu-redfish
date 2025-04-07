@@ -122,6 +122,15 @@ public:
               std::string(T::get_component().to_string()) + " [UUID = '" + uuid + "'] not found.");
     }
 
+    T get_only() const {
+        std::lock_guard<std::recursive_mutex> lock{m_mutex};
+        if (m_manager_data.size() != 1) {
+            THROW(exceptions::NotFound, "model",
+                  std::string("Unexpected number of ") + T::get_component().to_string() + "s. Could not select the only entry.");
+        }
+        return m_manager_data[0];
+    }
+
     ManagerDataVec get_entries(Filter filter = [](const T&) { return true; }) {
         ManagerDataVec ret{};
         std::lock_guard<std::recursive_mutex> lock{m_mutex};
@@ -152,6 +161,15 @@ public:
         }
         THROW(exceptions::InvalidUuid, "model",
               std::string(T::get_component().to_string()) + " [UUID = '" + uuid + "'] not found.");
+    }
+
+    Reference get_only_reference() {
+        std::lock_guard<std::recursive_mutex> lock{m_mutex};
+        if (m_manager_data.size() != 1) {
+            THROW(exceptions::NotFound, "model",
+                  std::string("Unexpected number of ") + T::get_component().to_string() + "s. Could not select the only entry.");
+        }
+        return Reference(m_manager_data[0], m_mutex);
     }
 
     using Hook = std::function<void(const T&)>;

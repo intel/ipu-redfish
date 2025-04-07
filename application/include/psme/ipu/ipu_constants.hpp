@@ -12,6 +12,7 @@ namespace ipu {
 namespace enums {
 ENUM(State, uint32_t, ContinuousOverride, OneTimeOverride, OneTimeOverrideSynced, OneTimeOverrideUpdated);
 ENUM(BootType, uint32_t, DramBoot, LocalIscsiBoot, LocalIscsiBoot_ISO, InternalUefiShell, Pxe, Http, Other);
+ENUM(BootOption, uint32_t, ram, ramdisk, iscsi);
 } // namespace enums
 
 namespace constants {
@@ -20,9 +21,12 @@ extern const char* BOOT_TYPE;
 extern const char* ERROR;
 extern const char* IP_VERSION;
 extern const char* VPORT_ID;
+extern const char* NONE;
+extern const char* CURRENT_BOOT_OPTION;
 extern const char* DESTINATION_PLDM_FILEPATH;
 extern const char* PLDM_FILE_FOLDER;
 extern const char* DOWNLOADED_IMAGE_NAME;
+extern const char* ACC_BOOT_OVERRIDE_FILEPATH;
 extern const char* ACC_BOOT_OPTION_FILEPATH;
 extern const char* RESERVED_MEMORY_DIRECTORY;
 extern const char* RESERVED_MEMORY_FILEPATH;

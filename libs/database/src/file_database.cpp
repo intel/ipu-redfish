@@ -275,7 +275,7 @@ unsigned FileDatabase::foreach (Serializable& key, ForeachFunction function) {
         if (!key.unserialize(stripped_name)) {
             continue;
         }
-        names.push_back(stripped_name);
+        names.push_back(std::move(stripped_name));
     }
 
     /* process all names */

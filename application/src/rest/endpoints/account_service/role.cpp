@@ -60,7 +60,7 @@ Role::~Role() {}
 
 void Role::get(const server::Request& req, server::Response& res) {
     auto role_id = req.params[PathParam::ROLE_ID];
-    auto role = RoleManager::get_instance()->get(role_id);
+    const auto& role = RoleManager::get_instance()->get(role_id);
 
     auto r = make_prototype();
     r[constants::Role::ASSIGNED_PRIVILEGES] = role.get_privileges();

@@ -1,7 +1,7 @@
+# <license_header>
+#
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright (C) 2024 Intel Corporation
-
-# <license_header>
 #
 # Copyright (c) 2017-2019 Intel Corporation
 #
@@ -19,32 +19,32 @@
 #
 # </license_header>
 
-# Not the latest version - intentionally using 6.2.1 - same as in IPU SDK
-FetchContent_Declare(gmp
-    URL "https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz"
-    URL_HASH MD5=0b82665c4a92fd2ade7440c13fcaa42b
+FetchContent_Declare(microhttpd
+    URL "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.72.tar.gz"
+    URL_HASH MD5=2a286193af88ab2ae3149748d4b46187
 )
 
-pkg_check_modules(gmp IMPORTED_TARGET gmp=6.2.1)
-if(gmp_FOUND)
-    message("gmp library ver: ${gmp_VERSION}")
-    message("gmp include dir: ${gmp_INCLUDE_DIRS}")
-    message("gmp library dir: ${gmp_LIBRARY_DIRS}")
+pkg_check_modules(microhttpd IMPORTED_TARGET libmicrohttpd=0.9.72)
+if(microhttpd_FOUND)
+    message("microhttpd library ver: ${microhttpd_VERSION}")
+    message("microhttpd include dir: ${microhttpd_INCLUDE_DIRS}")
+    message("microhttpd library dir: ${microhttpd_LIBRARY_DIRS}")
 endif()
 
-if(NOT gmp_POPULATED AND NOT gmp_FOUND)
-    message("Building gmp...")
-    FetchContent_Populate(gmp)
+if(NOT microhttpd_POPULATED AND NOT microhttpd_FOUND)
+    message("Building microhttpd...")
+    FetchContent_Populate(microhttpd)
 
     set(CONFIGURE_FLAGS)
     list(APPEND CONFIGURE_FLAGS --enable-static=yes)
     list(APPEND CONFIGURE_FLAGS --enable-shared=no)
+    list(APPEND CONFIGURE_FLAGS --enable-https=yes)
     list(APPEND CONFIGURE_FLAGS ${CONFIGURE_EXTRA_FLAGS})
 
     # Configure
     execute_process(
-        COMMAND ${gmp_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
-        WORKING_DIRECTORY ${gmp_BINARY_DIR}
+        COMMAND ${microhttpd_SOURCE_DIR}/configure ${CONFIGURE_FLAGS}
+        WORKING_DIRECTORY ${microhttpd_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
@@ -52,7 +52,7 @@ if(NOT gmp_POPULATED AND NOT gmp_FOUND)
     # Build
     execute_process(
         COMMAND make ${BUILD_EXTRA_ARGS}
-        WORKING_DIRECTORY ${gmp_BINARY_DIR}
+        WORKING_DIRECTORY ${microhttpd_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
@@ -60,13 +60,13 @@ if(NOT gmp_POPULATED AND NOT gmp_FOUND)
     # Install
     execute_process(
         COMMAND make install
-        WORKING_DIRECTORY ${gmp_BINARY_DIR}
+        WORKING_DIRECTORY ${microhttpd_BINARY_DIR}
         OUTPUT_QUIET
         ERROR_QUIET
     )
 
-    pkg_check_modules(gmp REQUIRED IMPORTED_TARGET gmp=6.2.1)
-    message("gmp library ver: ${gmp_VERSION}")
-    message("gmp include dir: ${gmp_INCLUDE_DIRS}")
-    message("gmp library dir: ${gmp_LIBRARY_DIRS}")
+    pkg_check_modules(microhttpd REQUIRED IMPORTED_TARGET libmicrohttpd=0.9.72)
+    message("microhttpd library ver: ${microhttpd_VERSION}")
+    message("microhttpd include dir: ${microhttpd_INCLUDE_DIRS}")
+    message("microhttpd library dir: ${microhttpd_LIBRARY_DIRS}")
 endif()

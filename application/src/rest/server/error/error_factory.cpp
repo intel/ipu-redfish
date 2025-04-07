@@ -225,7 +225,7 @@ const MessageObject create_message_object_from_gami_code(ErrorCode gami_error_co
     }
 
     if (!property_name.empty()) {
-        related_properties.push_back(property_name);
+        related_properties.push_back(std::move(property_name));
     }
 
     return create_message_object(redfish_code, message, severity, resolution, related_properties);

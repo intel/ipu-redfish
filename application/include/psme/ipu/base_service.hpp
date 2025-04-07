@@ -1,11 +1,11 @@
 /* SPDX-License-Identifier: BSD-3-Clause */
-/* Copyright (C) 2022 Intel Corporation */
+/* Copyright (C) 2024 Intel Corporation */
 
 #pragma once
 
 #include "agent-framework/module/enum/common.hpp"
+#include "agent-framework/module/enum/compute.hpp"
 #include "agent-framework/module/utils/optional_field.hpp"
-#include "json-wrapper/json-wrapper.hpp"
 
 namespace psme {
 namespace ipu {
@@ -15,9 +15,6 @@ namespace ipu {
  */
 class BaseService {
 public:
-    /*! @brief Destructor */
-    virtual ~BaseService() = 0;
-
     virtual void trigger_acc_reset(const agent_framework::model::enums::ResetType& reset_type) = 0;
 
     virtual void trigger_imc_reset(const agent_framework::model::enums::ResetType& reset_type) = 0;
@@ -27,7 +24,8 @@ public:
                                     const OptionalField<std::string>& password,
                                     std::string& task_uuid) = 0;
 
-    virtual void set_acc_boot_options(const json::Json& redfish_request) = 0;
+    virtual void set_acc_boot_override(OptionalField<agent_framework::model::enums::BootOverride>,
+                                       OptionalField<agent_framework::model::enums::BootOverrideTarget>) = 0;
 
     virtual void insert_virtual_media(const std::string& img, const agent_framework::model::enums::TransferMethod& transfer_method,
                                       const OptionalField<std::string>& username,

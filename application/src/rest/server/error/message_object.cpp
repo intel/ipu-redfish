@@ -29,7 +29,7 @@
 using namespace psme::rest::error;
 
 namespace {
-static const constexpr char TYPE[] = "#Message.v1_2_0.Message";
+static const constexpr char TYPE[] = "#Message.v1_3_0.Message";
 }
 
 void MessageObject::add_related_property(const std::string& related_property) {

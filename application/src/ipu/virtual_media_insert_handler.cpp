@@ -37,8 +37,8 @@ void VirtualMediaInsertHandler::run(std::string& uuid) {
     task_resource.set_id(static_cast<uint64_t>(tasks_count + 1));
     task_manager.add_entry(task_resource);
 
-    task_creator.add_exception_callback(std::bind(&VirtualMediaInsertHandler::add_exception_message, this, task_uuid, std::placeholders::_1));
-    task_creator.add_completion_callback(std::bind(&VirtualMediaInsertHandler::add_completion_message, this, task_uuid));
+    task_creator.add_exception_callback(std::bind(&VirtualMediaInsertHandler::exception_callback, this, task_uuid, std::placeholders::_1));
+    task_creator.add_completion_callback(std::bind(&VirtualMediaInsertHandler::completion_callback, this, task_uuid));
     task_creator.set_promised_response([]() { return json::Json{}; });
     task_creator.set_promised_error_thrower([](const agent_framework::exceptions::GamiException& exception) {
         return agent_framework::exceptions::InvalidValue("Simple Update failed: " + exception.get_message());
@@ -52,14 +52,9 @@ void VirtualMediaInsertHandler::run(std::string& uuid) {
 }
 
 void VirtualMediaInsertHandler::eject_previous_media() {
-    auto& virtual_media_manager = agent_framework::module::get_manager<agent_framework::model::VirtualMedia>();
-    auto uuids = virtual_media_manager.get_keys();
+    auto virtual_media = agent_framework::module::get_manager<agent_framework::model::VirtualMedia>()
+                             .get_only_reference();
 
-    if (uuids.empty()) {
-        return;
-    }
-
-    auto virtual_media = virtual_media_manager.get_entry_reference(uuids[0]);
     if (!virtual_media->get_inserted()) {
         return;
     }
@@ -69,18 +64,13 @@ void VirtualMediaInsertHandler::eject_previous_media() {
     virtual_media->set_image_name({});
     virtual_media->set_inserted(false);
 
-    DatabaseEntity<VIRTUAL_MEDIA_ENTITY_NAME> entity(uuids[0]);
+    DatabaseEntity<VIRTUAL_MEDIA_ENTITY_NAME> entity(virtual_media->get_uuid());
     entity.del(psme::ipu::constants::DOWNLOADED_IMAGE_NAME);
     std::filesystem::remove(IMAGE_SYMLINK);
     std::filesystem::remove(IMAGE_PATH);
 }
 
 void VirtualMediaInsertHandler::download_image() {
-    std::filesystem::space_info si = std::filesystem::space(IMAGE_FOLDER);
-    if (si.available < MAX_IMAGE_SIZE) {
-        throw std::runtime_error("There is not enough space left on " + std::string(IMAGE_FOLDER));
-    }
-
     log_info("ipu", "Starting virtual media image download.");
 
     CurlHandler()
@@ -95,14 +85,8 @@ void VirtualMediaInsertHandler::download_image() {
 void VirtualMediaInsertHandler::create_symlink() {
     using namespace agent_framework::model::enums;
 
-    auto& system_manager = agent_framework::module::get_manager<agent_framework::model::System>();
-    auto system_uuids = system_manager.get_keys();
-
-    if (system_uuids.empty()) {
-        return;
-    }
-
-    auto acc = system_manager.get_entry(system_uuids[0]);
+    auto acc = agent_framework::module::get_manager<agent_framework::model::System>()
+                   .get_only();
 
     if (acc.get_boot_override() == BootOverride::Disabled) {
         return;
@@ -131,14 +115,8 @@ void VirtualMediaInsertHandler::create_symlink() {
 }
 
 void VirtualMediaInsertHandler::update_virtual_media() {
-    auto& virtual_media_manager = agent_framework::module::get_manager<agent_framework::model::VirtualMedia>();
-    auto uuids = virtual_media_manager.get_keys();
-
-    if (uuids.empty()) {
-        return;
-    }
-
-    auto virtual_media = virtual_media_manager.get_entry_reference(uuids[0]);
+    auto virtual_media = agent_framework::module::get_manager<agent_framework::model::VirtualMedia>()
+                             .get_only_reference();
 
     std::string img_filename = std::filesystem::path(m_img).filename();
 
@@ -159,7 +137,7 @@ void VirtualMediaInsertHandler::update_info(const std::string& img, const agent_
     m_password = password;
 }
 
-void VirtualMediaInsertHandler::add_completion_message(const std::string& task_uuid) {
+void VirtualMediaInsertHandler::completion_callback(const std::string& task_uuid) {
     m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>().get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{agent_framework::model::attribute::Message{
@@ -173,7 +151,7 @@ void VirtualMediaInsertHandler::add_completion_message(const std::string& task_u
     log_info("ipu", "Virtual Media inserted successfully.");
 }
 
-void VirtualMediaInsertHandler::add_exception_message(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex) {
+void VirtualMediaInsertHandler::exception_callback(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex) {
     m_lock.clear();
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>().get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{agent_framework::model::attribute::Message{
@@ -184,6 +162,12 @@ void VirtualMediaInsertHandler::add_exception_message(const std::string& task_uu
         agent_framework::model::attribute::Message::RelatedProperties{},
         agent_framework::model::attribute::Message::MessageArgs{}}};
     task->set_messages(messages);
+    if (std::filesystem::exists(IMAGE_SYMLINK)) {
+        std::filesystem::remove(IMAGE_SYMLINK);
+    }
+    if (std::filesystem::exists(IMAGE_PATH)) {
+        std::filesystem::remove(IMAGE_PATH);
+    }
     log_info("ipu", "Virtual Media insert failed.");
 }
 

@@ -10,7 +10,7 @@
 
 #include "ipu/curl_handler.hpp"
 #include "ipu/ipu_constants.hpp"
-#include "ipu/ipu_update.hpp"
+#include "ipu/ipu_update_handler.hpp"
 #include "ipu/simple_update_handler.hpp"
 
 using namespace psme::rest;
@@ -37,7 +37,7 @@ void SimpleUpdateHandler::download_package() {
 }
 
 void SimpleUpdateHandler::update_ipu() {
-    psme::ipu::ipu_update(DESTINATION_PLDM_FILEPATH);
+    m_reset_type = IpuUpdateHandler().run_update(DESTINATION_PLDM_FILEPATH);
 }
 
 void SimpleUpdateHandler::invoke_update(std::string& uuid) {
@@ -92,6 +92,7 @@ void SimpleUpdateHandler::update_info(const std::string& img,
 
 void SimpleUpdateHandler::completion_handler(const std::string& task_uuid) {
     m_lock.clear();
+    log_info("ipu", "The " + m_reset_type + " reset is required to apply the update.");
     auto task = agent_framework::module::get_manager<agent_framework::model::Task>()
                     .get_entry_reference(task_uuid);
     agent_framework::model::Task::Messages messages{
@@ -100,6 +101,8 @@ void SimpleUpdateHandler::completion_handler(const std::string& task_uuid) {
                                                    "None",
                                                    agent_framework::model::attribute::Message::RelatedProperties{},
                                                    agent_framework::model::attribute::Message::MessageArgs{}}};
+
+    messages.add_entry(get_message());
     task->set_messages(messages);
     remove_package();
 }
@@ -124,6 +127,32 @@ void SimpleUpdateHandler::try_lock() {
     if (m_lock.test_and_set()) {
         throw ServerException(ErrorFactory::create_resource_in_use_error("Unable to execute several update tasks simultaneously."));
     }
+}
+
+agent_framework::model::attribute::Message SimpleUpdateHandler::get_message() {
+    agent_framework::model::attribute::Message msg{};
+
+    msg.set_message_id("Base.1.8.ResetRequired");
+    msg.set_severity(agent_framework::model::enums::Health::Warning);
+    msg.set_related_properties(agent_framework::model::attribute::Message::RelatedProperties{});
+    msg.set_resolution("Perform the required reset action on the specified component.");
+
+    std::string msg_template("In order to apply changes, recover from errors, or complete the operation, ");
+
+    if ((m_reset_type == "IMCR") || (m_reset_type == "ACCR")) {
+        msg.set_content(msg_template +
+                        "a component reset is required with the Reset action URI "
+                        "'/redfish/v1/Managers/1/Actions/Manager.Reset' and ResetType 'ForceRestart'.");
+        msg.set_message_args(agent_framework::model::attribute::Message::MessageArgs{"/redfish/v1/Managers/1/Actions/Manager.Reset", "ForceRestart"});
+    } else if (m_reset_type == "PERST") {
+        msg.set_content(msg_template + "a host reset is required.");
+    } else if (m_reset_type == "POR") {
+        msg.set_content(msg_template + "a host power cycle reset is required.");
+    }
+
+    m_reset_type = "";
+
+    return msg;
 }
 
 } // namespace ipu

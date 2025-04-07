@@ -55,7 +55,7 @@ TARGET_SUBDIRECTORIES=("application" "encrypter" "libs")
 # POSSIBLE CONFIGURATIONS
 POSSIBLE_BUILD_TYPES=("debug" "release" "coverage" "asanitize" "tsanitize")
 POSSIBLE_COMPILERS=("gcc" "clang")
-POSSIBLE_ARCHITECTURES=("64" "arm")
+POSSIBLE_ARCHITECTURES=("64" "arm" "ipu")
 
 # FIRST OPTION
 # Find all possible targets by scanning through CMakeLists.txt for "add_executable/add_library", strip unnecessary elements,
@@ -434,30 +434,30 @@ function build
     if [[ ! -f Makefile ]] ; then
         # Generate build directories if there is no Makefile
 
-        case "${ARCHITECTURE}" in
-            64)
-                CMAKE=$(which cmake)
-                if [[ $COMPILER == "clang" ]] ; then
-                    CC=$(which clang)
-                    CXX=$(which clang++)
-                elif [[ $COMPILER == "gcc" ]] ; then
-                    CC=$(which gcc)
-                    CXX=$(which g++)
-                else
-                    CC=""
-                    CXX=""
-                fi
-                CMAKE_COMMAND="$CMAKE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX"
-                CMAKE_COMMAND="$CMAKE_COMMAND -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_C_FLAGS=-m64"
-                ;;
-            arm)
-                set +u
-                source /toolchain/crosstool/environment-setup-aarch64-intel-linux-gnu
-                set -u
-                CMAKE=$(which cmake)
-                CMAKE_COMMAND="$CMAKE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX"
-                ;;
-        esac
+        if [ "${ARCHITECTURE}" != "ipu" ]; then
+            CMAKE=$(which cmake)
+            if [[ $COMPILER == "clang" ]] ; then
+                CC=$(which clang)
+                CXX=$(which clang++)
+            elif [[ $COMPILER == "gcc" ]] ; then
+                CC=$(which gcc)
+                CXX=$(which g++)
+            else
+                CC=""
+                CXX=""
+            fi
+            CMAKE_COMMAND="$CMAKE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX"
+            CMAKE_COMMAND="$CMAKE_COMMAND -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX"
+            if [ "${ARCHITECTURE}" == "64" ]; then
+                CMAKE_COMMAND="$CMAKE_COMMAND -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_C_FLAGS=-m64"
+            fi
+        else
+            set +u
+            source /toolchain/crosstool/environment-setup-aarch64-intel-linux-gnu
+            set -u
+            CMAKE=$(which cmake)
+            CMAKE_COMMAND="$CMAKE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DIPU:BOOL=TRUE"
+        fi
 
         # OPTIONS are passed to compilation, so either setting environment
         # variable or passing -D to script will work.

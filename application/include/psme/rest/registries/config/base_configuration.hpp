@@ -44,12 +44,12 @@ static std::string make_base_configuration() {
             {
                 "Name" : "Base Message Registry File",
                 "Description" : "Base Message Registry File locations",
-                "Registry" : "Base.1.18.0",
+                "Registry" : "Base.1.19.0",
                 "MessageRegistries" : [
                     {
                         "Language" : "en",
                         "Type" : "external",
-                        "PublicationUri" : "https://redfish.dmtf.org/registries/Base.1.18.0.json",
+                        "PublicationUri" : "https://redfish.dmtf.org/registries/Base.1.19.0.json",
                         "Uri" : null,
                         "ArchiveUri" : null,
                         "ArchiveFile" : null

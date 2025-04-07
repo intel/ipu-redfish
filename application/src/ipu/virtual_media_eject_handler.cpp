@@ -41,14 +41,7 @@ void VirtualMediaEjectHandler::update_virtual_media() {
 }
 
 GenericManager<VirtualMedia>::Reference VirtualMediaEjectHandler::get_virtual_media_resource() {
-    auto& virtual_media_manager = get_manager<VirtualMedia>();
-    auto uuids = virtual_media_manager.get_keys();
-
-    if (uuids.empty()) {
-        throw std::runtime_error("Cannot locate virtual media resource");
-    }
-
-    return virtual_media_manager.get_entry_reference(uuids[0]);
+    return get_manager<VirtualMedia>().get_only_reference();
 }
 
 } // namespace ipu

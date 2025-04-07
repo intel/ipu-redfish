@@ -19,10 +19,6 @@
 #
 # </license_header>
 
-if(CMAKE_CROSSCOMPILING)
-    return()
-endif()
-
 FetchContent_Declare(gpg-error
     URL "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.42.tar.bz2"
     URL_HASH MD5=133fed221ba8f63f5842858a1ff67cb3

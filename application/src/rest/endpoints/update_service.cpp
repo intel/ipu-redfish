@@ -34,7 +34,7 @@ json::Json make_prototype() {
     json::Json r(json::Json::value_t::object);
 
     r[Common::ODATA_CONTEXT] = "/redfish/v1/$metadata#UpdateService.UpdateService";
-    r[Common::ODATA_TYPE] = "#UpdateService.v1_14_0.UpdateService";
+    r[Common::ODATA_TYPE] = "#UpdateService.v1_14_1.UpdateService";
     r[Common::ODATA_ID] = json::Json::value_t::null;
 
     r[Common::ID] = "UpdateService";

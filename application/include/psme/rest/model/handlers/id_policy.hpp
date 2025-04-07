@@ -165,7 +165,7 @@ database::IdValue::IdType IdPolicy<CT, NZ>::IdPolicy::get_id(const UuidType& uui
     /* check if ID has been already allocated and if so, check next id */
     auto _id = id;
     for (;;) {
-        auto allocated = memoizer->is_allocated_for(parent, id);
+        const auto& allocated = memoizer->is_allocated_for(parent, id);
         /* not allocated */
         if (allocated.empty()) {
             break;

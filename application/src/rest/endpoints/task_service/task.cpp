@@ -76,7 +76,7 @@ void endpoint::Task::get(const server::Request& request, server::Response& respo
     for (const auto& message : s.get_messages()) {
         json::Json p = json::Json::value_t::object;
 
-        p[constants::Common::ODATA_TYPE] = "#Message.v1_0_0.Message";
+        p[constants::Common::ODATA_TYPE] = "#Message.v1_3_0.Message";
         p[constants::MessageObject::MESSAGE_ID] = message.get_message_id();
         p[constants::MessageObject::MESSAGE] = message.get_content();
         p[constants::MessageObject::RELATED_PROPERTIES] = json::Json::value_t::array;

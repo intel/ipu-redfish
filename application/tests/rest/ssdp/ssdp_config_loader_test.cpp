@@ -35,7 +35,7 @@ static constexpr char TEST_CONFIGURATION[] = R"(
 {
     "service" : "Intel IPU Redfish Service",
     "server": {
-        "network-interface-name" : "eth0",
+        "restricted-to-interface" : "eth0",
         "certs-directory" : "/work/redfish/certs",
         "port": 8443,
         "thread-mode" : "select",

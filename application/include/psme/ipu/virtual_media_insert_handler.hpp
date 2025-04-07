@@ -5,7 +5,6 @@
 
 #include "agent-framework/module/enum/common.hpp"
 #include "agent-framework/module/utils/optional_field.hpp"
-#include "curl/curl.h"
 #include <atomic>
 #include <string>
 
@@ -29,8 +28,8 @@ private:
     void download_image();
     void create_symlink();
     void update_virtual_media();
-    void add_completion_message(const std::string& task_uuid);
-    void add_exception_message(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex);
+    void completion_callback(const std::string& task_uuid);
+    void exception_callback(const std::string& task_uuid, const agent_framework::exceptions::GamiException& ex);
 private:
     std::string m_img{};
     agent_framework::model::enums::TransferMethod m_transfer_method{agent_framework::model::enums::TransferMethod::Upload};

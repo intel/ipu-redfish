@@ -40,7 +40,7 @@ json::Json make_prototype() {
 
     r[Common::ODATA_CONTEXT] = "/redfish/v1/$metadata#ManagerAccount.ManagerAccount";
     r[Common::ODATA_ID] = json::Json::value_t::null;
-    r[Common::ODATA_TYPE] = "#ManagerAccount.v1_12_1.ManagerAccount";
+    r[Common::ODATA_TYPE] = "#ManagerAccount.v1_13_0.ManagerAccount";
     r[Common::ID] = json::Json::value_t::null;
     r[Common::NAME] = "User Account";
     r[Common::DESCRIPTION] = "User Account";
@@ -68,7 +68,7 @@ Account::~Account() {}
 
 void Account::get(const server::Request& req, server::Response& res) {
     auto account_id = id_to_uint64(req.params[PathParam::ACCOUNT_ID]);
-    auto account = AccountManager::get_instance()->get(account_id);
+    const auto& account = AccountManager::get_instance()->get(account_id);
     // TODO: account should have role id property
 
     auto r = make_prototype();

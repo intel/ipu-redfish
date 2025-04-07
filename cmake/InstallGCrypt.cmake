@@ -19,17 +19,12 @@
 #
 # </license_header>
 
-if(CMAKE_CROSSCOMPILING)
-    return()
-endif()
-
 FetchContent_Declare(libgcrypt
     URL "https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.10.0.tar.bz2"
     URL_HASH MD5=4faebf2c262af56ba4acfd68dd32440c
 )
 
 pkg_check_modules(libgcrypt IMPORTED_TARGET libgcrypt>=1.10.0)
-
 if(libgcrypt_FOUND)
     message("libgcrypt library ver: ${libgcrypt_VERSION}")
     message("libgcrypt include dir: ${libgcrypt_INCLUDE_DIRS}")

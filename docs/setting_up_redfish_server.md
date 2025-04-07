@@ -7,8 +7,9 @@ and transfer it to the IMC.
 
 The plan is to have it installed in `/etc/` by default.
 
-Set `"network-interface-name"` to the Linux name of the network interface on which
-you want Redfish server to respond. By default, it points to the I211 1G adapter.
+Set `"restricted-to-interface"` to the Linux name of the network interface if
+you want to restrict Redfish server the listening on interfaces by only one. 
+By default, the value is `null`.
 
 In `"server"` section:
 

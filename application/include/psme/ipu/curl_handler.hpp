@@ -33,7 +33,7 @@ struct CurlFile {
 class CurlHandler {
 public:
     CurlHandler();
-    ~CurlHandler() = default;
+    ~CurlHandler();
     CurlHandler& set_url(const std::string& url);
     CurlHandler& set_file_name(const std::string& file);
     CurlHandler& set_max_file_size(uint64_t file_size);
@@ -50,6 +50,7 @@ private:
     static size_t progress_callback(void* clientp, curl_off_t dltotal, curl_off_t dlnow,
                                     curl_off_t ultotal, curl_off_t ulnow);
     static size_t write_data_callback(void* data, size_t size, size_t nmemb, CurlFile* curl_file);
+    static int log_callback(CURL* handle, curl_infotype type, char* data, size_t size, void* clientp);
 
     std::unique_ptr<CURL, void (*)(CURL*)> m_curl_handle;
     size_t m_progress;

@@ -40,18 +40,15 @@ json::Json make_prototype() {
     r[Common::ODATA_TYPE] = "#ServiceRoot.v1_17_0.ServiceRoot";
     r[Common::ID] = "RootService";
     r[Common::DESCRIPTION] = "Service Root";
-    r[Root::REDFISH_VERSION] = "1.20.1";
+    r[Root::REDFISH_VERSION] = "1.21.0";
     r[Common::UUID] = "00000000000-000000-0000000-00000000000000000";
-    r[Root::EVENT_SERVICE][Common::ODATA_ID] = "/redfish/v1/EventService";
     r[Root::SESSION_SERVICE][Common::ODATA_ID] = "/redfish/v1/SessionService";
     r[Root::UPDATE_SERVICE][Common::ODATA_ID] = "/redfish/v1/UpdateService";
     r[Root::TASKS][Common::ODATA_ID] = "/redfish/v1/TaskService";
     r[Root::REGISTRIES][Common::ODATA_ID] = "/redfish/v1/Registries";
-    r[Common::CHASSIS][Common::ODATA_ID] = "/redfish/v1/Chassis";
     r[Root::SYSTEMS][Common::ODATA_ID] = "/redfish/v1/Systems";
     r[Root::MANAGERS][Common::ODATA_ID] = "/redfish/v1/Managers";
     r[Root::ACCOUNT_SERVICE][Common::ODATA_ID] = "/redfish/v1/AccountService";
-    r[Root::TELEMETRY_SERVICE][Common::ODATA_ID] = "/redfish/v1/TelemetryService";
     r[Common::LINKS][SessionService::SESSIONS][Common::ODATA_ID] = "/redfish/v1/SessionService/Sessions";
     return r;
 }

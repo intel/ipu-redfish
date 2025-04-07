@@ -307,3 +307,26 @@ TEST_F(GenericManagerTest, UUIDsAreCorrectlyTranslatedIntoIDs) {
     // check that nothing has changed in the manager
     EXPECT_TRUE(is_default());
 }
+
+TEST_F(GenericManagerTest, GetOnlyThrowsIfMore) {
+    EXPECT_THROW(gm.get_only(), ::agent_framework::exceptions::NotFound);
+    EXPECT_THROW(gm.get_only_reference(), ::agent_framework::exceptions::NotFound);
+}
+
+TEST(GenericManager, GetOnlyThrowsIfEmpty) {
+    GenericManager<TestObject> gm;
+    EXPECT_THROW(gm.get_only(), ::agent_framework::exceptions::NotFound);
+    EXPECT_THROW(gm.get_only_reference(), ::agent_framework::exceptions::NotFound);
+}
+
+TEST(GenericManager, GetOnlySuccess) {
+    GenericManager<TestObject> gm;
+    const TestObject elem{"0", "1", 1, 0, "T"};
+    gm.add_entry(elem);
+
+    auto entry = gm.get_only();
+    EXPECT_EQ(elem, entry);
+
+    auto entry_reference = gm.get_only_reference();
+    EXPECT_EQ(elem, *entry_reference);
+}

@@ -11,28 +11,39 @@ def convert_old_to_new_config(config_path):
     with open(config_path, 'r') as file:
         config = json.load(file)
     
-    # Check if the configuration contains the "connectors" field
-    if "connectors" in config.get("server", {}):
-        # Extract the first connector's details
-        connector_details = config["server"]["connectors"][0]
-        
-        # Remove the "connectors" field
-        del config["server"]["connectors"]
-        
-        # Flatten the "network-interface-name" array to a single string
-        if isinstance(config["server"].get("network-interface-name"), list):
-            config["server"]["network-interface-name"] = config["server"]["network-interface-name"][0]
-        
-        # Move the connector details to the top level of the "server" object
-        config["server"].update(connector_details)
-        
+    if ("event-service" in config) or ("connectors" in config.get("server", {})):
+        # Remove event-service
+        if config["event-service"]:
+            del config["event-service"]
+
+        # Check if the configuration contains the "connectors" field
+        if "connectors" in config.get("server", {}):
+            # Extract the first connector's details
+            connector_details = config["server"]["connectors"][0]
+
+            # Remove the "connectors" field
+            del config["server"]["connectors"]
+
+            # Flatten the "network-interface-name" to "restricted-to-interface" single string
+            if isinstance(config["server"].get("network-interface-name"), list):
+                config["server"]["restricted-to-interface"] = config["server"]["network-interface-name"][0]
+                del config["server"]["network-interface-name"]
+            elif isinstance(config["server"].get("network-interface-name"), str):
+                config["server"]["restricted-to-interface"] = config["server"]["network-interface-name"]
+                del config["server"]["network-interface-name"]
+
+            # Move the connector details to the top level of the "server" object
+            config["server"].update(connector_details)
+
         # Save the new configuration format to the same file
         with open(config_path, 'w') as file:
             json.dump(config, file, indent=4)
-        
+
         print(f"Converted old config to new format and saved to {config_path}")
     else:
         print("The configuration file is already in the new format.")
+
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

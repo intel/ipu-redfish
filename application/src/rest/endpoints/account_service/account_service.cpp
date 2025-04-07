@@ -39,7 +39,7 @@ json::Json make_prototype() {
 
     r[Common::ODATA_CONTEXT] = "/redfish/v1/$metadata#AccountService.AccountService";
     r[Common::ODATA_ID] = json::Json::value_t::null;
-    r[Common::ODATA_TYPE] = "#AccountService.v1_15_1.AccountService";
+    r[Common::ODATA_TYPE] = "#AccountService.v1_16_0.AccountService";
     r[Common::ID] = "AccountService";
     r[Common::NAME] = "Account Service";
     r[Common::DESCRIPTION] = "Account Service";

@@ -22,14 +22,11 @@
  *
  * */
 
-#include "agent-framework/module/compute_components.hpp"
-#include "agent-framework/module/managers/generic_manager.hpp"
 #include "agent-framework/module/managers/utils/manager_utils.hpp"
 #include "agent-framework/module/model/attributes/status.hpp"
 #include "agent-framework/module/model/manager.hpp"
-#include "agent-framework/module/model/memory.hpp"
-#include "agent-framework/module/model/processor.hpp"
 #include "agent-framework/module/model/system.hpp"
+#include "agent-framework/module/model/virtual_media.hpp"
 #include "psme/rest/utils/status_helpers.hpp"
 
 #include <gmock/gmock.h>
@@ -45,15 +42,12 @@ namespace rest {
 namespace endpoint {
 
 using SystemManager = module::GenericManager<System>;
-using MemoryManager = module::GenericManager<Memory>;
-using ProcessorManager = module::GenericManager<Processor>;
+using VirtualMediaManager = module::GenericManager<VirtualMedia>;
 
 class RollupTest : public ::testing::Test {
 public:
     RollupTest() : systems(get_manager<System>()),
-                   // yeah, I know this is not correct english
-                   memories(get_manager<Memory>()),
-                   processors(get_manager<Processor>()) {}
+                   media(get_manager<VirtualMedia>()) {}
 
     ~RollupTest();
 
@@ -62,8 +56,7 @@ public:
 
     void TearDown() {
         systems.clear_entries();
-        memories.clear_entries();
-        processors.clear_entries();
+        media.clear_entries();
     }
 protected:
     template <typename T>
@@ -80,8 +73,7 @@ protected:
     }
 
     SystemManager& systems;
-    MemoryManager& memories;
-    ProcessorManager& processors;
+    VirtualMediaManager& media;
 };
 
 RollupTest::~RollupTest() {}
@@ -99,55 +91,54 @@ TEST_F(RollupTest, SingleResourceNoChild) {
 
 TEST_F(RollupTest, HealthyParentWithHealthyChild) {
     auto system1 = addResource<System>("", "system1", Health::OK);
-    auto memory1 = addResource<Memory>("system1", "memory1", Health::OK);
-    EXPECT_EQ(Health::OK, HealthRollup<Memory>().get(memory1));
+    auto media1 = addResource<VirtualMedia>("system1", "media1", Health::OK);
+    EXPECT_EQ(Health::OK, HealthRollup<VirtualMedia>().get(media1));
     EXPECT_EQ(Health::OK, HealthRollup<System>().get(system1));
 }
 
 TEST_F(RollupTest, HealthyParentWithUnHealthyChild) {
     auto system1 = addResource<System>("", "system1", Health::OK);
-    auto memory1 = addResource<Memory>("system1", "memory1", Health::Critical);
-    EXPECT_EQ(Health::Critical, HealthRollup<Memory>().get(memory1));
+    auto media1 = addResource<VirtualMedia>("system1", "media1", Health::Critical);
+    EXPECT_EQ(Health::Critical, HealthRollup<VirtualMedia>().get(media1));
     EXPECT_EQ(Health::Critical, HealthRollup<System>().get(system1));
 }
 
 TEST_F(RollupTest, UnhealthyParentWithHealthyChild) {
     auto system1 = addResource<System>("", "system1", Health::Warning);
-    auto memory1 = addResource<Memory>("system1", "memory1", Health::OK);
-    EXPECT_EQ(Health::OK, HealthRollup<Memory>().get(memory1));
+    auto media1 = addResource<VirtualMedia>("system1", "media1", Health::OK);
+    EXPECT_EQ(Health::OK, HealthRollup<VirtualMedia>().get(media1));
     EXPECT_EQ(Health::Warning, HealthRollup<System>().get(system1));
 }
 
 TEST_F(RollupTest, HealthyParentWithUnknownChildHealth) {
     auto system1 = addResource<System>("", "system1", Health::OK);
-    auto memory1 = addResource<Memory>("system1", "memory1", {});
-    EXPECT_FALSE(HealthRollup<Memory>().get(memory1).has_value());
+    auto media1 = addResource<VirtualMedia>("system1", "media1", {});
+    EXPECT_FALSE(HealthRollup<VirtualMedia>().get(media1).has_value());
     EXPECT_EQ(Health::OK, HealthRollup<System>().get(system1));
 }
 
 TEST_F(RollupTest, UnhealthyParentWithUnknownChildHealth) {
     auto system1 = addResource<System>("", "system1", Health::Warning);
-    auto memory1 = addResource<Memory>("system1", "memory1", {});
-    EXPECT_FALSE(HealthRollup<Memory>().get(memory1).has_value());
+    auto media1 = addResource<VirtualMedia>("system1", "media1", {});
+    EXPECT_FALSE(HealthRollup<VirtualMedia>().get(media1).has_value());
     EXPECT_EQ(Health::Warning, HealthRollup<System>().get(system1));
 }
 
 TEST_F(RollupTest, ParentWithUnknownHealthWithUnknownChildHealth) {
     auto system1 = addResource<System>("", "system1", {});
-    auto memory1 = addResource<Memory>("system1", "memory1", {});
-    EXPECT_FALSE(HealthRollup<Memory>().get(memory1).has_value());
+    auto media1 = addResource<VirtualMedia>("system1", "media1", {});
+    EXPECT_FALSE(HealthRollup<VirtualMedia>().get(media1).has_value());
     EXPECT_FALSE(HealthRollup<System>().get(system1).has_value());
 }
 
 TEST_F(RollupTest, IgnoreOtherComponentsWhenFilterSpecified) {
     auto system1 = addResource<System>("", "system1", Health::Critical);
-    addResource<Memory>("system1", "memory1", Health::Warning);
-    addResource<Memory>("system1", "memory2", Health::OK);
-    addResource<Memory>("system1", "memory3", {});
-    addResource<Processor>("system1", "processor1", Health::Critical);
+    addResource<VirtualMedia>("system1", "media1", Health::Warning);
+    addResource<VirtualMedia>("system1", "media2", Health::OK);
+    addResource<VirtualMedia>("system1", "media3", {});
 
     // only rolled up health of dimm. ignore everything else (also System itself)
-    EXPECT_EQ(Health::Warning, HealthRollup<System>().get(system1, agent_framework::model::enums::Component::Memory));
+    EXPECT_EQ(Health::Warning, HealthRollup<System>().get(system1, agent_framework::model::enums::Component::VirtualMedia));
 }
 
 } // namespace endpoint

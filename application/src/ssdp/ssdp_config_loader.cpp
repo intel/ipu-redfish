@@ -25,6 +25,7 @@
 #include "psme/ssdp/ssdp_config_loader.hpp"
 #include "agent-framework/module/service_uuid.hpp"
 #include "json-wrapper/json-wrapper.hpp"
+#include "net/network_interface.hpp"
 #include "psme/rest/constants/constants.hpp"
 #include "psme/rest/server/connector/connector_options_loader.hpp"
 
@@ -51,8 +52,15 @@ SsdpServiceConfig load_ssdp_config(const json::Json& config, const std::string& 
     }
     auto announce_interval = seconds(ssdp_config.value("announce-interval-seconds", uint16_t{}));
     ssdp_service_config.set_announce_interval(announce_interval);
-    const auto& nic_name = config["server"]["network-interface-name"];
-    ssdp_service_config.add_nic_name(nic_name.get<std::string>());
+    const auto& nic_name = config["server"]["restricted-to-interface"];
+    if (!nic_name.is_null()) {
+        ssdp_service_config.add_nic_name(nic_name.get<std::string>());
+    } else {
+        const auto ifaces = net::NetworkInterface::get_interfaces();
+        for (const auto& nic : ifaces) {
+            ssdp_service_config.add_nic_name(nic.get_name());
+        }
+    }
     ssdp_service_config.set_socket_ttl(ssdp_config.value("ttl", std::uint8_t{}));
     ssdp_service_config.set_service_uuid(uuid);
     ssdp_service_config.set_service_urn("urn:dmtf-org:service:redfish-rest:1");

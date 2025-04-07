@@ -37,7 +37,7 @@ json::Json make_prototype() {
 
     r[Common::ODATA_CONTEXT] = "/redfish/v1/$metadata#Manager.Manager";
     r[Common::ODATA_ID] = json::Json::value_t::null;
-    r[Common::ODATA_TYPE] = "#Manager.v1_19_1.Manager";
+    r[Common::ODATA_TYPE] = "#Manager.v1_19_2.Manager";
     r[Common::ID] = json::Json::value_t::null;
     r[Common::NAME] = "Manager";
     r[Common::DESCRIPTION] = "Manager description";
@@ -57,25 +57,22 @@ json::Json make_prototype() {
     r[Common::STATUS][Common::HEALTH_ROLLUP] = json::Json::value_t::null;
 
     r[Common::REDUNDANCY] = json::Json::value_t::array;
-    r[Manager::ETHERNET_INTERFACES] = json::Json::value_t::null;
-    r[Common::LOG_SERVICES] = json::Json::value_t::null;
-    r[Manager::NETWORK_PROTOCOL] = json::Json::value_t::object;
-
-    /*
-     * @TODO for BVT, cannot be read right now, will be used later
-     *
-     * r[Manager::GRAPHICAL_CONSOLE] = json::Json::value_t::null;
-     * r[Manager::SERIAL_CONSOLE] = json::Json::value_t::null;
-     * r[Manager::COMMAND_SHELL] = json::Json::value_t::null;
-     *
-     * */
 
     r[Common::LINKS][Common::ODATA_TYPE] = "#Manager.v1_18_0.Links";
-    r[Common::LINKS][Manager::MANAGER_FOR_CHASSIS] = json::Json::value_t::array;
     r[Common::LINKS][Manager::MANAGER_FOR_SERVERS] = json::Json::value_t::array;
-    r[Common::LINKS][Manager::MANAGER_FOR_SWITCHES] = json::Json::value_t::array;
 
     r[Common::ACTIONS] = json::Json::value_t::object;
+
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS] = json::Json::value_t::object;
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Inventory::BOOTLOADER] = json::Json::value_t::null;
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL] = json::Json::value_t::object;
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Common::ODATA_TYPE] = "#InteIPUSoftwareInventory.v1_0_0.AdditionalVersions";
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::IMC] = json::Json::value_t::null;
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::RECOVERY] = json::Json::value_t::null;
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::OROM] = json::Json::value_t::null;
+    r[Common::OEM][Common::INTEL] = json::Json::value_t::object;
+    r[Common::OEM][Common::INTEL][Common::ODATA_TYPE] = "#InteIPUManager.v1_0_0.Manager";
+    r[Common::OEM][Common::INTEL][Inventory::BOARD_ID] = json::Json::value_t::null;
 
     return r;
 }
@@ -89,18 +86,6 @@ auto is_rack_manger = is_manager_of_type<agent_framework::model::enums::ManagerI
 auto is_enclosure_manger = is_manager_of_type<agent_framework::model::enums::ManagerInfoType::EnclosureManager>;
 
 void fill_links(const agent_framework::model::Manager& manager, json::Json& r) {
-    // find all chassis managed by this manager
-    auto managed_chassis_uuids = agent_framework::module::get_manager<agent_framework::model::Chassis>()
-                                     .get_keys(manager.get_uuid(), [](const agent_framework::model::Chassis& ch) {
-                                         // Link only those chassis which are manageable.
-                                         return ch.get_is_managed();
-                                     });
-    for (const auto& chassis_uuid : managed_chassis_uuids) {
-        json::Json chassis_link = json::Json();
-        chassis_link[Common::ODATA_ID] =
-            endpoint::utils::get_component_url(agent_framework::model::enums::Component::Chassis, chassis_uuid);
-        r[Common::LINKS][constants::Manager::MANAGER_FOR_CHASSIS].push_back(chassis_link);
-    }
 
     // find all systems managed by this manager
     auto managed_system_uuids = agent_framework::module::get_manager<agent_framework::model::System>()
@@ -135,32 +120,6 @@ void fill_manager_actions(const server::Request& request,
 
 } // namespace
 
-/* TODO for BVT, cannot be read right now, will be used later
-template <typename T>
-json::Json console_to_json(const T& console)
-{
-    if (console.get_enabled().has_value()) {
-        json::Json r = json::Json();
-        r[constants::Manager::SERVICE_ENABLED] = console.get_enabled();
-
-        r[constants::Manager::MAX_CONCURRENT_SESSIONS] = 0;
-        if(console.get_max_sessions().has_value()) {
-            r[constants::Manager::MAX_CONCURRENT_SESSIONS] = console.get_max_sessions();
-        }
-
-        json::Json array_json = json::Json::value_t::array;;
-        const auto& supported = console.get_types_supported();
-        for (const auto& entry : supported) {
-            array_json.push_back(std::move(entry.to_string()));
-        }
-        r[constants::Manager::CONNECT_TYPES_SUPPORTED] = std::move(array_json);
-        return r;
-    }
-    else {
-        return json::Json::value_t::null;
-    }
-}*/
-
 endpoint::Manager::Manager(const std::string& path) : EndpointBase(path) {}
 
 endpoint::Manager::~Manager() {}
@@ -189,24 +148,14 @@ void endpoint::Manager::get(const server::Request& request, server::Response& re
     r[Common::FIRMWARE_VERSION] = manager.get_firmware_version();
     r[Common::UUID] = manager.get_guid();
 
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Inventory::BOOTLOADER] = manager.get_boot_image_version();
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::IMC] = manager.get_imc_version();
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::RECOVERY] = manager.get_recovery_imc_version();
+    r[Common::ADDITIONAL_FIRMWARE_VERSIONS][Common::OEM][Common::INTEL][Inventory::OROM] = manager.get_imc_orom_version();
+    r[Common::OEM][Common::INTEL][Inventory::BOARD_ID] = manager.get_board_id_version();
+
     r[constants::Manager::DATE_TIME] = manager.get_date_time();
     r[constants::Manager::DATE_TIME_LOCAL_OFFSET] = manager.get_date_time_local_offset();
-
-    /*
-     * @TODO for BVT, cannot be read right now, will be used later
-     *
-     * r[constants::Manager::GRAPHICAL_CONSOLE] = console_to_json(manager.get_graphical_console());
-     * r[constants::Manager::SERIAL_CONSOLE] = console_to_json(manager.get_serial_console());
-     * r[constants::Manager::COMMAND_SHELL] = console_to_json(manager.get_command_shell());
-     *
-     * */
-
-    r[constants::Manager::NETWORK_PROTOCOL][Common::ODATA_ID] =
-        PathBuilder(request).append(constants::Manager::NETWORK_PROTOCOL).build();
-    r[constants::Manager::ETHERNET_INTERFACES][Common::ODATA_ID] =
-        PathBuilder(request).append(constants::Manager::ETHERNET_INTERFACES).build();
-    r[constants::Common::LOG_SERVICES][Common::ODATA_ID] =
-        PathBuilder(request).append(constants::Common::LOG_SERVICES).build();
 
     ::fill_manager_actions(request, manager, r);
 

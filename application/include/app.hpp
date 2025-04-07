@@ -28,7 +28,6 @@
 
 #pragma once
 #include "net/network_change_notifier.hpp"
-#include "psme/rest/eventing/event_service.hpp"
 #include "psme/rest/rest_server.hpp"
 #include "psme/rest/security/session/session_service.hpp"
 
@@ -70,8 +69,8 @@ private:
     /*!
      * @brief Initialization method
      *
-     * Responsible for initialization of loggers, registration server,
-     * eventing server and rest server. Does not start the mentioned servers.
+     * Responsible for initialization of loggers, registration server
+     * and rest server. Does not start the mentioned servers.
      */
     void init(const char* config_path);
     void load_configuration(const char* config_path);
@@ -80,7 +79,6 @@ private:
     void init_network_change_notifier();
     void init_ssdp_service();
     void init_rest_server();
-    void init_rest_event_service();
     void init_rest_session_service();
     void init_registries();
     void cleanup();
@@ -89,7 +87,6 @@ private:
     void wait_for_termination();
 
     std::unique_ptr<psme::rest::server::RestServer> m_rest_server{};
-    std::unique_ptr<psme::rest::eventing::EventService> m_rest_event_service{};
     std::unique_ptr<psme::rest::security::session::SessionService> m_rest_session_service{};
     std::unique_ptr<net::NetworkChangeNotifier> m_network_change_notifier{};
     std::shared_ptr<ssdp::SsdpService> m_ssdp_service{};
