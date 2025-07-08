@@ -216,7 +216,7 @@ if (ENABLE_TESTS)
 endif()
 
 if(RUN_CLANG_FORMAT)
-  find_program(CLANG_FORMAT "clang-format")
+  find_program(CLANG_FORMAT "clang-format-19")
   if(CLANG_FORMAT)
     file(GLOB_RECURSE FILES_TO_FORMAT
       ${PROJECT_SOURCE_DIR}/application/*.hpp
@@ -228,7 +228,7 @@ if(RUN_CLANG_FORMAT)
     )
     add_custom_target(
       format ALL
-      COMMAND clang-format
+      COMMAND clang-format-19
       -i
       --style=file
       ${FILES_TO_FORMAT}

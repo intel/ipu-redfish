@@ -26,9 +26,8 @@ using namespace agent_framework;
 using namespace agent_framework::discovery;
 
 model::NetworkInterface EthernetInterfaceBuilder::build_default(const Uuid& parent_uuid) {
-    model::NetworkInterface interface {
-        parent_uuid
-    };
+    model::NetworkInterface interface{
+        parent_uuid};
     interface.set_status({model::enums::State::Enabled, model::enums::Health::OK});
     return interface;
 }

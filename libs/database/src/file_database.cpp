@@ -383,7 +383,7 @@ bool FileDatabase::save_file(const std::string& file_name, const std::string& da
     }
 
     /* check current mode of the file */
-    struct stat stats {};
+    struct stat stats{};
     if (0 != fstat(file_descriptor, &stats)) {
         log_error("db", "Cannot set mode for " << file_name << ":: " << strerror(errno));
         return false;

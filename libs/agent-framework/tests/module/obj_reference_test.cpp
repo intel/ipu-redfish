@@ -88,7 +88,7 @@ TEST_F(ObjReferenceTest, OtherThreadIsBlockedUntilObjReferenceIsReleased) {
         // thread might be started with some delay
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         ASSERT_FALSE(mgr.res.thread_touched); // thread is expected to be blocked
-    }                                         // RAII - mutex is released
+    } // RAII - mutex is released
 
     if (t->joinable()) {
         t->join();

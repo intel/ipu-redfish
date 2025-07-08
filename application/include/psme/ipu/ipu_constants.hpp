@@ -22,6 +22,7 @@ extern const char* ERROR;
 extern const char* IP_VERSION;
 extern const char* VPORT_ID;
 extern const char* NONE;
+extern const char* ACTIVE_BOOT_OPTION;
 extern const char* CURRENT_BOOT_OPTION;
 extern const char* DESTINATION_PLDM_FILEPATH;
 extern const char* PLDM_FILE_FOLDER;
