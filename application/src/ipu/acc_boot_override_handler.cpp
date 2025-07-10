@@ -171,6 +171,30 @@ BootOverrideTarget AccBootOverrideHandler::detect_dram_boot_type() {
     }
 }
 
+void AccBootOverrideHandler::ensure_memory_reservation_active() {
+    json::Json json;
+    try {
+        /* try to parse the file */
+        std::ifstream boot_option_file(constants::ACC_BOOT_OPTION_FILEPATH);
+        json = json::Json::parse(boot_option_file);
+    }
+    catch (const json::Json::parse_error&) {
+        log_error("ipu", "Failed to parse boot option file " << constants::ACC_BOOT_OPTION_FILEPATH << ". The file is not JSON-compliant.");
+        throw std::runtime_error("Failed to ensure that memory for ISO will be reserved.");
+    }
+
+    json[ACTIVE_BOOT_OPTION] = "redfish_override";
+
+    try {
+        std::ofstream boot_option_file(constants::ACC_BOOT_OPTION_FILEPATH);
+        boot_option_file << json.dump(2);
+    }
+    catch (const std::exception& ex) {
+        log_error("ipu", "Failed to modify boot option file " << constants::ACC_BOOT_OPTION_FILEPATH);
+        throw std::runtime_error("Failed to ensure that memory for ISO will be reserved.");
+    }
+}
+
 void AccBootOverrideHandler::update_view(const std::optional<OverrideConfig>& config) {
     auto acc = get_manager<System>().get_only_reference();
 
@@ -482,6 +506,9 @@ void AccBootOverrideHandler::set(OptionalField<BootOverride> override,
             if (!has_iso_memory_reservation) {
                 create_memory_reservation_for_iso();
             }
+
+            ensure_memory_reservation_active();
+
             if (!iso_symlink_exists) {
                 ensure_iso_symlink_presence();
             }

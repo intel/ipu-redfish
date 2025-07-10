@@ -105,6 +105,14 @@ private:
     void clear_memory_reservation_for_iso();
 
     /*!
+     * @brief Ensures that FW will notice the memory reservation for ACC ISO boot.
+     * This function implemnts a workaround for the fact that FW ignores
+     * the BMD configuration override if the "current" (requested) boot option
+     * is the same as the "active" (previously requested) boot option.
+     * */
+    void ensure_memory_reservation_active();
+
+    /*!
      * @brief Removes ISO symlink.
      * */
     void remove_iso_symlink();

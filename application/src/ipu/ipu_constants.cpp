@@ -13,6 +13,7 @@ const char* ERROR = "Error";
 const char* IP_VERSION = "IpVersion";
 const char* VPORT_ID = "VPortId";
 const char* NONE = "None";
+const char* ACTIVE_BOOT_OPTION = "active_boot_option";
 const char* CURRENT_BOOT_OPTION = "current_boot_option";
 const char* DOWNLOADED_IMAGE_NAME = "DownloadedImageName";
 const char* IMAGE_TEMP_FOLDER = "/tmp/";
