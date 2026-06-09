@@ -1,3 +1,9 @@
+# DISCONTINUATION OF PROJECT
+This project will no longer be maintained by Intel.  
+Intel has ceased development and contributions including, but not limited to, maintenance, bug fixes, new releases, or updates, to this project.  
+Intel no longer accepts patches to this project.  
+If you have an ongoing need to use this project, are interested in independently developing it, or would like to maintain patches for the open source software community, please create your own fork of this project.  
+
 # Redfish® Server for Intel® Infrastructure Processing Unit SoC E2100
 
 This repository contains the source code for the Redfish Server for the Intel® Infrastructure Processing Unit (IPU) SoC E2100.
